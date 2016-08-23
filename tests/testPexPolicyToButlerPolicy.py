@@ -39,7 +39,7 @@ class PolicyTestCase(unittest.TestCase):
         pafPolicyPath = os.path.join(os.environ['OBS_TEST_DIR'], 'policy', 'testMapper.paf')
         self.assertTrue(os.path.exists(pafPolicyPath))
         pexPolicy = lsst.pex.policy.Policy.createPolicy(pafPolicyPath)
-        policy = lsst.daf.persistence.Policy(filePath=pafPolicyPath)
+        policy = lsst.daf.persistence.Policy(pafPolicyPath)
         return (policy, pexPolicy)
 
     def test(self):
@@ -80,7 +80,7 @@ class PolicyTestCase(unittest.TestCase):
         self.assertTrue(os.path.exists(pafPolicyPath))
         pexPolicy = lsst.pex.policy.Policy.createPolicy(pafPolicyPath)
 
-        policy = lsst.daf.persistence.Policy(filePath=pafPolicyPath)
+        policy = lsst.daf.persistence.Policy(pafPolicyPath)
         policyPath = os.path.join(os.environ['OBS_TEST_DIR'], 'policy', 'tempTestMapper.yaml')
         if os.path.exists(policyPath):
             os.remove(policyPath)
@@ -92,7 +92,7 @@ class PolicyTestCase(unittest.TestCase):
 
         # test that the data went through the entire wringer correctly - verify the
         # original pex data matches the lsst.daf.persistence.Policy data
-        yamlPolicy = lsst.daf.persistence.Policy(filePath=policyPath)
+        yamlPolicy = lsst.daf.persistence.Policy(policyPath)
         yamlNames = yamlPolicy.names()
         yamlNames.sort()
         pexNames = pexPolicy.names()

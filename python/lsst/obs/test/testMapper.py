@@ -36,7 +36,7 @@ class TestMapper(CameraMapper):
 
     def __init__(self, inputPolicy=None, **kwargs):
         policyFilePath = dafPersist.Policy.defaultPolicyFile(self.packageName, "testMapper.paf", "policy")
-        policy = dafPersist.Policy(filePath=policyFilePath)
+        policy = dafPersist.Policy(policyFilePath)
 
         self.doFootprints = False
         if inputPolicy is not None:

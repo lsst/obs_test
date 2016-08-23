@@ -43,7 +43,8 @@ class PolicyTestCase(unittest.TestCase):
         Checks that values not specified in the local _policy file are set with those of the package's
         _policy file.
         """
-        obsTestRepoDir = os.path.join(getPackageDir("obs_test"), "data")
+        obsTestDir = getPackageDir("obs_test")
+        obsTestRepoDir = os.path.join(obsTestDir, "data")
         testData = (
             (os.path.join(obsTestRepoDir, 'policyInRepo1/a'),
                 os.path.join(obsTestRepoDir, 'policyInRepo1', 'a', '_parent', '_policy.paf')),
@@ -60,7 +61,7 @@ class PolicyTestCase(unittest.TestCase):
 
             # Run a simple test case to verify that although the package's policy was overloaded with some
             # values, other values specified in the policy file in the package are loaded.
-            policyPath = os.path.join('policy', 'testMapper.paf')
+            policyPath = os.path.join(obsTestDir, 'policy', 'testMapper.paf')
             policy = lsst.pex.policy.Policy_createPolicy(policyPath)
             template = policy.get('exposures.postISRCCD.template')
             mapperTemplate = mapper.mappings['postISRCCD'].template
