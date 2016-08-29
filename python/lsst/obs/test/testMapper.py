@@ -24,8 +24,8 @@ import os
 
 import lsst.utils
 import lsst.afw.image.utils as afwImageUtils
+import lsst.daf.persistence as dafPersist
 from lsst.daf.butlerUtils import CameraMapper
-import lsst.pex.policy as pexPolicy
 from .testCamera import TestCamera
 
 __all__ = ["TestMapper"]
@@ -35,8 +35,8 @@ class TestMapper(CameraMapper):
     packageName = 'obs_test'
 
     def __init__(self, inputPolicy=None, **kwargs):
-        policyFile = pexPolicy.DefaultPolicyFile(self.packageName, "testMapper.paf", "policy")
-        policy = pexPolicy.Policy(policyFile)
+        policyFilePath = dafPersist.Policy.defaultPolicyFile(self.packageName, "testMapper.paf", "policy")
+        policy = dafPersist.Policy(policyFilePath)
 
         self.doFootprints = False
         if inputPolicy is not None:
@@ -46,7 +46,7 @@ class TestMapper(CameraMapper):
                 else:
                     kwargs[kw] = inputPolicy.get(kw)
 
-        CameraMapper.__init__(self, policy, policyFile.getRepositoryPath(), **kwargs)
+        CameraMapper.__init__(self, policy, policyFilePath, **kwargs)
         self.filterIdMap = {
             'u': 0, 'g': 1, 'r': 2, 'i': 3, 'z': 4, 'y': 5, 'i2': 5}
 
