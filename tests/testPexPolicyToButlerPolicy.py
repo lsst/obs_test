@@ -1,5 +1,5 @@
-from past.builtins import basestring
 #!/usr/bin/env python
+from past.builtins import basestring
 
 #
 # LSST Data Management System

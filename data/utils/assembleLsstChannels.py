@@ -121,8 +121,9 @@ if __name__ == "__main__":
 Output is written to the current directory as file %r, which is OVERWRITTEN if it exists.
 """ % (OutFileName,),
     )
-    parser.add_argument("dir", default=".", nargs="?", help="directory containing LSSTSim channel images " +
-                        "(at least for channels 0,0, 0,1, 1,0 and 1,1); defaults to the current working directory.")
+    parser.add_argument("dir", default=".", nargs="?",
+                        help="directory containing LSSTSim channel images (at least for channels " +
+                             "0,0, 0,1, 1,0 and 1,1); defaults to the current working directory.")
     args = parser.parse_args()
 
     assembleImage(args.dir)
