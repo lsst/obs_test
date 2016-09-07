@@ -1,5 +1,4 @@
 #!/usr/bin/env python2
-from __future__ import absolute_import, division, print_function
 #
 # LSST Data Management System
 # Copyright 2014 LSST Corporation.
@@ -23,6 +22,7 @@ from __future__ import absolute_import, division, print_function
 #
 """Assemble a set of LSSTSim channel images into one obs_test image
 """
+from __future__ import absolute_import, division, print_function
 import argparse
 import glob
 import os.path
