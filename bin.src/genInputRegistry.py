@@ -110,7 +110,7 @@ def processRawDir(rawDir, conn, done, qsp):
         expTime = md.get("EXPTIME")
         mjdObs = md.get("MJD-OBS")
         taiObs = dafBase.DateTime(mjdObs, dafBase.DateTime.MJD,
-                                  dafBase.DateTime.TAI).toString()[:-1]
+                                  dafBase.DateTime.TAI).toString(dafBase.DateTime.UTC)[:-1]
         conn.execute("""INSERT INTO raw VALUES
             (NULL, ?, ?, ?, ?)""",
                      (visit, filterName, taiObs, expTime))
