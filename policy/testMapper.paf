@@ -163,7 +163,6 @@ datasets: {
         python:       "lsst.daf.base.PropertySet"
         persistable:  "ignored"
         storage:      "ignored:ccdExposureId"
-        tables:       "raw"
     }
     ccdExposureId_bits: {
         template:     "ignored"
@@ -171,7 +170,6 @@ datasets: {
         python:       "lsst.daf.base.PropertySet"
         persistable:  "ignored"
         storage:      "ignored:ccdExposureId_bits"
-        tables:       "raw"
     }
     goodSeeingCoaddId: {
         template:     "ignored"
@@ -182,22 +180,6 @@ datasets: {
         tables:       "raw"
     }
     goodSeeingCoaddId_bits: {
-        template:     "ignored"
-        # Provide something to import, although we actually return an int
-        python:       "lsst.daf.base.PropertySet"
-        persistable:  "ignored"
-        storage:      "ignored"
-        tables:       "raw"
-    }
-    deepCoaddId: {
-        template:     "ignored"
-        # Provide something to import, although we actually return a Long
-        python:       "lsst.daf.base.PropertySet"
-        persistable:  "ignored"
-        storage:      "ignored"
-        tables:       "raw"
-    }
-    deepCoaddId_bits: {
         template:     "ignored"
         # Provide something to import, although we actually return an int
         python:       "lsst.daf.base.PropertySet"
@@ -261,14 +243,6 @@ datasets: {
         tables:        raw
         tables:        raw_skyTile
     }
-    icSrc_schema: {
-        template:      "schema/icSrc.fits"
-        python:        "lsst.afw.table.SourceCatalog"
-        persistable:   "SourceCatalog"
-        storage:       "FitsCatalogStorage"
-        tables:        raw
-        tables:        raw_skyTile
-    }
     srcMatch: {
         template:      "srcMatch/v%(visit)d_f%(filter)s.fits"
         python:        "lsst.afw.table.BaseCatalog"
@@ -325,14 +299,6 @@ datasets: {
         tables:        raw
         tables:        raw_skyTile
     }
-    src_schema: {
-        template:      "schema/src.fits"
-        python:        "lsst.afw.table.SourceCatalog"
-        persistable:        "SourceCatalog"
-        storage:    "FitsCatalogStorage"
-        tables:        raw
-        tables:        raw_skyTile
-    }
     transformed_src: {
         template:      "transformed_src/v%(visit)d_f%(filter)s.fits"
         python:        "lsst.afw.table.BaseCatalog"
@@ -346,8 +312,6 @@ datasets: {
         python:        "lsst.afw.table.BaseCatalog"
         persistable:   "ignored"
         storage:       "FitsCatalogStorage"
-        tables:        raw
-        tables:        raw_skyTile
     }
     modelfits: {
         template:      "modelfits/v%(visit)d_f%(filter)s.fits"
@@ -396,12 +360,6 @@ datasets: {
         storage:    "FitsCatalogStorage"
         tables:        raw
         tables:        raw_skyTile
-    }
-    deepCoadd_meas_schema: {
-        template:      "schema/deepCoadd_meas.fits"
-        python:        "lsst.afw.table.SourceCatalog"
-        persistable:   "SourceCatalog"
-        storage:       "FitsCatalogStorage"
     }
     sourceHist: {
         template:      "results/st%(skyTile)d/sourceHist.fits"
@@ -483,20 +441,6 @@ datasets: {
         tables:        raw
         tables:        raw_skyTile
     }
-    measureCoaddSources_config: {
-        template:      "config/measureMerged.py"
-        python:        "lsst.pipe.tasks.multiBand.MeasureMergedCoaddSourcesConfig"
-        persistable:   "Config"
-        storage:       "ConfigStorage"
-    }
-    Mosaic_config: {
-        template:      "config/mosaic.py"
-        python:        "lsst.meas.mosaic.mosaicTask.MosaicConfig"
-        persistable:      "Config"
-        storage:    "ConfigStorage"
-        tables:        raw
-        tables:        raw_skyTile
-    }
     Mosaic_metadata: {
         template:      "metadata/Mosaic.boost"
         python:        "lsst.daf.base.PropertySet"
@@ -542,14 +486,6 @@ datasets: {
         python:        "lsst.daf.base.PropertySet"
         persistable:        "PropertySet"
         storage:    "BoostStorage"
-        tables:        raw
-        tables:        raw_skyTile
-    }
-    transformSrcMeasurement_config: {
-        template:      "config/transformSrcMeasurement.py"
-        python:        "lsst.pipe.tasks.transformMeasurement.RunTransformConfig"
-        persistable:   "Config"
-        storage:       "ConfigStorage"
         tables:        raw
         tables:        raw_skyTile
     }
@@ -616,10 +552,4 @@ datasets: {
         tables:        raw
         tables:        raw_skyTile
     }
-    brightObjectMask: {
-        template:      "deepCoadd/BrightObjectMasks/%(tract)d/BrightObjectMask-%(tract)d-%(patch)s-%(filter)s.reg"
-        python:        "lsst.pipe.tasks.objectMasks.ObjectMaskCatalog"
-        persistable:   "PurePythonClass"
-        storage:       "FitsCatalogStorage"
-    }	
 }
