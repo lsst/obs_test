@@ -22,6 +22,19 @@ exposures: {
         tables:        raw
         tables:        raw_skyTile
     }
+    rawAndFlat: {
+        python: lsst.obs.test.RawAndFlatContainer
+        composite: {
+            raw: { 
+                datasetType: raw
+            }
+            flat: { 
+                datasetType: flat
+            }
+        }
+        assembler:  lsst.obs.test.RawAndFlatAssembler
+        disassembler:  lsst.obs.test.RawAndFlatDisassembler
+    }
     postISRCCD: {
         template:    "postISRCCD/postISRCCD_v%(visit)d_f%(filter)s.fits"
         python:        "lsst.afw.image.ExposureF"

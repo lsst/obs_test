@@ -66,6 +66,15 @@ exposures:
     - raw
     - raw_skyTile
     template: raw/raw_v%(visit)d_f%(filter)s.fits.gz
+  dual_raw:
+    python: lsst.obs.test.RawAndFlatContainer
+    composite:
+      raw: 
+        datasetType: raw
+      flat: 
+        datasetType: flat
+    assembler:  lsst.obs.test.RawAndFlatAssembler
+    disassembler:  lsst.obs.test.RawAndFlatDisassembler
   visitim:
     level: Ccd
     persistable: ExposureF

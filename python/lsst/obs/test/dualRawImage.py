@@ -1,6 +1,6 @@
 #
 # LSST Data Management System
-# Copyright 2008, 2009, 2010 LSST Corporation.
+# Copyright 2016 LSST Corporation.
 #
 # This product includes software developed by the
 # LSST Project (http://www.lsst.org/).
@@ -19,8 +19,16 @@
 # the GNU General Public License along with this program.  If not,
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
-from .version import *
-from .testConfig import *
-from .testMapper import *
-from .makeTestRawVisitInfo import *
-from .dualRawImage import *
+
+class RawAndFlatContainer(object):
+    def __init__(self, a, b):
+        self.raw = a
+        self.flat = b
+
+def RawAndFlatAssembler(dataId, componentDict, cls):
+    obj = cls(a=componentDict['raw'], b=componentDict['flat'])
+    return obj
+
+def RawAndFlatDisassembler(obj, dataId, componentDict):
+    componentDict['raw'] = obj.raw
+    componentDict['flat'] = obj.flat
