@@ -36,16 +36,6 @@ import lsst.afw.image as afwImage
 OutFileName = "image.fits"
 SizeY = 1000  # number of pixels per amplifier in X direction (Y uses all pixels)
 
-KeysToCopy = (
-    "EPOCH",
-    "OBSID",
-    "TAI",
-    "MJD-OBS",
-    "EXPTIME",
-    "DARKTIME",
-    "AIRMASS",
-)
-
 
 def openChannelImage(dirPath, x, y):
     """Open an LSSTSim channel image
@@ -84,12 +74,7 @@ def assembleImage(dirPath):
     if inExposure.hasWcs():
         outExposure.setWcs(inExposure.getWcs())
     outExposure.setFilter(inExposure.getFilter())
-    inMetadata = inExposure.getMetadata()
-    outMetadata = outExposure.getMetadata()
-    for key in KeysToCopy:
-        if inMetadata.exists(key):
-            outMetadata.set(key, inMetadata.get(key))
-    outExposure.setMetadata(outMetadata)
+    outExposure.setMetadata(inExposure.getMetadata())
     outMI = outExposure.getMaskedImage()
 
     for x in (0, 1):
