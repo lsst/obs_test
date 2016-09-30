@@ -27,12 +27,15 @@ import lsst.afw.image.utils as afwImageUtils
 import lsst.daf.persistence as dafPersist
 from lsst.daf.butlerUtils import CameraMapper
 from .testCamera import TestCamera
+from .makeTestRawVisitInfo import MakeTestRawVisitInfo
 
 __all__ = ["TestMapper"]
 
 
 class TestMapper(CameraMapper):
     packageName = 'obs_test'
+
+    MakeRawVisitInfoClass = MakeTestRawVisitInfo
 
     def __init__(self, inputPolicy=None, **kwargs):
         policyFilePath = dafPersist.Policy.defaultPolicyFile(self.packageName, "testMapper.paf", "policy")

@@ -22,6 +22,7 @@
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
 
+import math
 import os
 import unittest
 
@@ -29,11 +30,15 @@ import lsst.utils.tests
 from lsst.utils import getPackageDir
 # we only import TestMapper from lsst.obs.test, but use the namespace to hide it from pytest
 import lsst.obs.test
+from lsst.daf.base import DateTime
+from lsst.daf.butlerUtils import MakeRawVisitInfo
 from lsst.daf.persistence import Butler
-from lsst.afw.image import DecoratedImageU, ExposureU
+from lsst.afw.image import DecoratedImageU, ExposureU, RotType_SKY
+from lsst.afw.coord import IcrsCoord, Coord
+from lsst.afw.geom import degrees
 
 
-class TestMapperTestCase(unittest.TestCase):
+class TestMapperTestCase(lsst.utils.tests.TestCase):
     """A test case for the test mapper."""
 
     def setUp(self):
@@ -129,6 +134,40 @@ class TestMapperTestCase(unittest.TestCase):
         dataId = dict(visit=1)
         stdImage = self.mapper.standardize("raw", rawImage, dataId)
         self.assertIsInstance(stdImage, ExposureU)
+        visitInfo = stdImage.getInfo().getVisitInfo()
+
+        exposureTime = 15.0
+        darkTime = 15.0
+        dateObs = DateTime(51195.2035520278, DateTime.MJD, DateTime.TAI)
+        dateAvg = DateTime(dateObs.nsecs(DateTime.TAI) + int(0.5e9*exposureTime), DateTime.TAI)
+        boresightRaDec = IcrsCoord(79.2452196867*degrees, -9.70229541541*degrees)
+        boresightAzAlt = Coord(289.979375363*degrees, (90 - 42.0568785956)*degrees)
+        boresightAirmass = 1.34682439137302
+        boresightRotAngle = (90-248.022002123)*degrees
+        rotType = RotType_SKY
+        obs_longitude = -70.749417*degrees
+        obs_latitude = -30.244633*degrees
+        obs_elevation = 2663.0
+        weath_airTemperature = 5.0
+        weath_airPressure = MakeRawVisitInfo.pascalFromMmHg(520.0)
+
+        visitInfo = stdImage.getInfo().getVisitInfo()
+        self.assertAlmostEqual(visitInfo.getDate().get(), dateAvg.get())
+        self.assertAlmostEqual(visitInfo.getExposureTime(), exposureTime)
+        self.assertAlmostEqual(visitInfo.getDarkTime(), darkTime)
+        self.assertCoordsNearlyEqual(visitInfo.getBoresightRaDec(), boresightRaDec)
+        self.assertCoordsNearlyEqual(visitInfo.getBoresightAzAlt(), boresightAzAlt)
+        self.assertAlmostEqual(visitInfo.getBoresightAirmass(), boresightAirmass)
+        self.assertAnglesNearlyEqual(visitInfo.getBoresightRotAngle(), boresightRotAngle)
+        self.assertEqual(visitInfo.getRotType(), rotType)
+        observatory = visitInfo.getObservatory()
+        self.assertAnglesNearlyEqual(observatory.getLongitude(), obs_longitude)
+        self.assertAnglesNearlyEqual(observatory.getLatitude(), obs_latitude)
+        self.assertAlmostEqual(observatory.getElevation(), obs_elevation)
+        weather = visitInfo.getWeather()
+        self.assertAlmostEqual(weather.getAirTemperature(), weath_airTemperature)
+        self.assertAlmostEqual(weather.getAirPressure(), weath_airPressure)
+        self.assertTrue(math.isnan(weather.getHumidity()))
 
     def testCameraFromButler(self):
         """Test that the butler can return the camera
