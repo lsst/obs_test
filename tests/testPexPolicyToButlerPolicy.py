@@ -1,4 +1,3 @@
-from past.builtins import basestring
 #!/usr/bin/env python
 
 #
@@ -26,6 +25,8 @@ from past.builtins import basestring
 import collections
 import os
 import unittest
+
+from past.builtins import basestring
 
 import lsst.daf.persistence
 import lsst.pex.policy

@@ -1,5 +1,4 @@
 #!/usr/bin/env python2
-from __future__ import absolute_import, division, print_function
 #
 # LSST Data Management System
 # Copyright 2014 LSST Corporation.
@@ -21,6 +20,7 @@ from __future__ import absolute_import, division, print_function
 # the GNU General Public License along with this program.  If not,
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
+from __future__ import absolute_import, division, print_function
 import argparse
 
 import pyfits

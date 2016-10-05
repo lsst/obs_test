@@ -43,12 +43,12 @@ To make obs_test flat images, from the obs_test directory:
 To make obs_test raw images, from the obs_test directory:
 
     setup -r .
-    data/utils/assembleLsstChannels.py /lsst4/krughoff/Tuesday_data/imSim/S12_lsstsim/raw/v890104911-fg/E000/R22/S00
-    mv image.fits raw_v1_fg.fits
-    data/utils/assembleLsstChannels.py /lsst4/krughoff/Tuesday_data/imSim/S12_lsstsim/raw/v890106021-fg/E000/R22/S00
-    mv image.fits raw_v2_fg.fits
-    data/utils/assembleLsstChannels.py /lsst4/krughoff/Tuesday_data/imSim/S12_lsstsim/raw/v890880321-fr/E000/R22/S00
-    mv image.fits raw_v3_fr.fits
+    data/utils/assembleLsstRaw.py /lsst4/krughoff/Tuesday_data/imSim/S12_lsstsim/raw/v890104911-fg/E000/R22/S00
+    mv raw.fits raw_v1_fg.fits
+    data/utils/assembleLsstRaw.py /lsst4/krughoff/Tuesday_data/imSim/S12_lsstsim/raw/v890106021-fg/E000/R22/S00
+    mv raw.fits raw_v2_fg.fits
+    data/utils/assembleLsstRaw.py /lsst4/krughoff/Tuesday_data/imSim/S12_lsstsim/raw/v890880321-fr/E000/R22/S00
+    mv raw.fits raw_v3_fr.fits
 
 To make an obs_test defects file from the bias frame generated above, from the obs_test directory:
 

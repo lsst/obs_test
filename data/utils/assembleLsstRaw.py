@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 #
 # LSST Data Management System
-# Copyright 2014 LSST Corporation.
+# Copyright 2016 LSST Corporation.
 #
 # This product includes software developed by the
 # LSST Project (http://www.lsst.org/).
@@ -33,74 +33,70 @@ import numpy
 import lsst.afw.geom as afwGeom
 import lsst.afw.image as afwImage
 
-OutFileName = "image.fits"
+OutFileName = "raw.fits"
 SizeY = 1000  # number of pixels per amplifier in X direction (Y uses all pixels)
 
 
 def openChannelImage(dirPath, x, y):
-    """Open an LSSTSim channel image
+    """Open an LSSTSim channel raw image
     """
     globStr = os.path.join(dirPath, "imsim_*_R22_S00_C%d%d*" % (y, x))
-    inImagePathList = glob.glob(globStr)
-    if len(inImagePathList) != 1:
-        raise RuntimeError("Found %s instead of 1 file" % (inImagePathList,))
-    inImagePath = inImagePathList[0]
-    inImageFileName = os.path.basename(inImagePath)
+    inDecoImagePathList = glob.glob(globStr)
+    if len(inDecoImagePathList) != 1:
+        raise RuntimeError("Found %s instead of 1 file" % (inDecoImagePathList,))
+    inDecoImagePath = inDecoImagePathList[0]
+    inDecoImageFileName = os.path.basename(inDecoImagePath)
     # calib images (which are float) have names such as imsim_2_R22_S00_C00.fits
     # raw images (which are unsigned int) have names such as imsim_890104911_R22_S00_C00_E000....
-    if re.match(r"imsim_\d\d\d\d\d", inImageFileName):
-        raise RuntimeError("Raw data; use assembleLsstRaw.py instead!")
+    if not re.match(r"imsim_\d\d\d\d\d", inDecoImageFileName):
+        raise RuntimeError("Not raw data")
 
-    print("loading %s as float data" % (inImageFileName,))
-    exposureClass = afwImage.ExposureF
-    return exposureClass(inImagePath)
+    print("loading %s as raw unsigned integer data" % (inDecoImageFileName,))
+    return afwImage.DecoratedImageU(inDecoImagePath)
 
 
 def assembleImage(dirPath):
     """Make one image by combining half of amplifiers C00, C01, C10, C11 of lsstSim data
     """
-    inExposure = openChannelImage(dirPath, 0, 0)
-    fullInDim = inExposure.getDimensions()
+    # views and assembly operations require a masked image, not a DecoratedImage
+    inDecoImage = openChannelImage(dirPath, 0, 0)
+    fullInDim = inDecoImage.getDimensions()
     yStart = fullInDim[1] - SizeY
     if yStart < 0:
         raise RuntimeError("channel image unexpectedly small")
     subDim = afwGeom.Extent2I(fullInDim[0], SizeY)  # dimensions of the portion of a channel that we use
     inSubBBox = afwGeom.Box2I(afwGeom.Point2I(0, yStart), subDim)
-    outBBox = afwGeom.Box2I(afwGeom.Point2I(0, 0), subDim * 2)
-    outExposure = inExposure.Factory(outBBox)
+    outBBox = afwGeom.Box2I(afwGeom.Point2I(0, 0), subDim*2)
+    outDecoImage = afwImage.DecoratedImageU(outBBox)
 
-    # copy WCS, filter and other metadata
-    if inExposure.hasWcs():
-        outExposure.setWcs(inExposure.getWcs())
-    outExposure.setFilter(inExposure.getFilter())
-    outExposure.setMetadata(inExposure.getMetadata())
-    outMI = outExposure.getMaskedImage()
+    # copy metadata
+    outDecoImage.setMetadata(inDecoImage.getMetadata())
 
     for x in (0, 1):
         for y in (0, 1):
-            inExposure = openChannelImage(dirPath, x, y)
-            inView = inExposure.Factory(inExposure, inSubBBox)
-            inMIView = inView.getMaskedImage()
+            inDecoImage = openChannelImage(dirPath, x, y)
+            inImage = inDecoImage.getImage()
+            inView = inImage.Factory(inImage, inSubBBox)
 
             # flip image about x axis for the y = 1 channels
             if y == 1:
-                inArrList = inMIView.getArrays()
-                for arr in inArrList:
-                    if numpy.any(arr != 0):
-                        arr[:, :] = numpy.flipud(arr)
+                arr = inView.getArray()
+                if numpy.any(arr != 0):
+                    arr[:, :] = numpy.flipud(arr)
 
-            xStart = x * subDim[0]
-            yStart = y * subDim[1]
+            xStart = x*subDim[0]
+            yStart = y*subDim[1]
             outSubBBox = afwGeom.Box2I(afwGeom.Point2I(xStart, yStart), subDim)
-            outMIView = outMI.Factory(outMI, outSubBBox)
-            outMIView[:] = inMIView
+            outImage = outDecoImage.getImage()
+            outView = outImage.Factory(outImage, outSubBBox)
+            outView[:] = inView
 
-    outExposure.writeFits(OutFileName)
+    outDecoImage.writeFits(OutFileName)
     print("wrote assembled data as %r" % (OutFileName,))
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="""Assemble a set of LSSTSim channel images into one obs_test image.
+        description="""Assemble a set of LSSTSim raw channel images into one obs_test image.
 
 Output is written to the current directory as file %r, which is OVERWRITTEN if it exists.
 """ % (OutFileName,),
