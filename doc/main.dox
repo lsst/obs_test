@@ -52,7 +52,7 @@ into a single image.
 Useful classes include:
 - \ref testCamera.TestCamera "TestCamera": camera geometry for the obs_test camera.
     Unlike most obs_* packages this package builds its own camera geometry (by instantiating this class),
-    rather than relying on the lsst.daf.butlerUtils.CameraMapper to load camera geometry data from
+    rather than relying on the lsst.obs.base.CameraMapper to load camera geometry data from
     a persisted lsst.afw.cameraGeom.CameraConfig.
 - \ref testMapper.TestMapper "TestMapper": camera mapper for the obs_test camera
 

@@ -25,7 +25,7 @@ import os
 import lsst.utils
 import lsst.afw.image.utils as afwImageUtils
 import lsst.daf.persistence as dafPersist
-from lsst.daf.butlerUtils import CameraMapper
+from lsst.obs.base import CameraMapper
 from .testCamera import TestCamera
 from .makeTestRawVisitInfo import MakeTestRawVisitInfo
 

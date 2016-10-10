@@ -31,7 +31,7 @@ from lsst.utils import getPackageDir
 # we only import TestMapper from lsst.obs.test, but use the namespace to hide it from pytest
 import lsst.obs.test
 from lsst.daf.base import DateTime
-from lsst.daf.butlerUtils import MakeRawVisitInfo
+from lsst.obs.base import MakeRawVisitInfo
 from lsst.daf.persistence import Butler
 from lsst.afw.image import DecoratedImageU, ExposureU, RotType_SKY
 from lsst.afw.coord import IcrsCoord, Coord
