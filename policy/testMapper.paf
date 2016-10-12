@@ -530,13 +530,6 @@ datasets: {
         tables:        raw
         tables:        raw_skyTile
     }
-    cal_ref_cat: {
-        persistable: SourceCatalog
-        python: lsst.afw.table.SourceCatalog
-        storage: FitsCatalogStorage
-        table: ignored
-        template: photo_astro_ref/%(pixel_id)s.fits
-    }
     other_photo_astro_ref: {
         persistable: SourceCatalog
         python: lsst.afw.table.SourceCatalog
