@@ -184,38 +184,6 @@ datasets: {
         persistable:  "ignored"
         storage:      "ignored:ccdExposureId_bits"
     }
-    goodSeeingCoaddId: {
-        template:     "ignored"
-        # Provide something to import, although we actually return a Long
-        python:       "lsst.daf.base.PropertySet"
-        persistable:  "ignored"
-        storage:      "ignored"
-        tables:       "raw"
-    }
-    goodSeeingCoaddId_bits: {
-        template:     "ignored"
-        # Provide something to import, although we actually return an int
-        python:       "lsst.daf.base.PropertySet"
-        persistable:  "ignored"
-        storage:      "ignored"
-        tables:       "raw"
-    }
-    chiSquaredCoaddId: {
-        template:     "ignored"
-        # Provide something to import, although we actually return a Long
-        python:       "lsst.daf.base.PropertySet"
-        persistable:  "ignored"
-        storage:      "ignored"
-        tables:       "raw"
-    }
-    chiSquaredCoaddId_bits: {
-        template:     "ignored"
-        # Provide something to import, although we actually return an int
-        python:       "lsst.daf.base.PropertySet"
-        persistable:  "ignored"
-        storage:      "ignored"
-        tables:       "raw"
-    }
     icExpBackground: {
         template:      "icExp/icExpBackground_v%(visit)d_f%(filter)s.fits"
         python:        "lsst.afw.math.BackgroundList"
