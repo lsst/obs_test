@@ -161,18 +161,14 @@ datasets: {
         storage:      "ignored:ampExposureId_bits"
         tables:       "raw"
     }
+    # dataset defined in obs_base modified in this mapper as follows:
     ccdExposureId: {
-        template:     "ignored"
         # Provide something to import, although we actually return a tuple
-        python:       "lsst.daf.base.PropertySet"
-        persistable:  "ignored"
         storage:      "ignored:ccdExposureId"
     }
+    # dataset defined in obs_base modified in this mapper as follows:
     ccdExposureId_bits: {
-        template:     "ignored"
         # Provide something to import, although we actually return a tuple
-        python:       "lsst.daf.base.PropertySet"
-        persistable:  "ignored"
         storage:      "ignored:ccdExposureId_bits"
     }
     icExpBackground: {
@@ -263,11 +259,9 @@ datasets: {
         tables:        raw
         tables:        raw_skyTile
     }
+    # dataset defined in obs_base modified in this mapper as follows:
     transformed_src_schema: {
-        template:      "schema/transformed_src.fits"
-        python:        "lsst.afw.table.BaseCatalog"
         persistable:   "ignored"
-        storage:       "FitsCatalogStorage"
     }
     sourceHist: {
         template:      "results/st%(skyTile)d/sourceHist.fits"
