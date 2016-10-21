@@ -25,10 +25,10 @@ class RawAndFlatContainer(object):
         self.raw = a
         self.flat = b
 
-def RawAndFlatAssembler(dataId, componentDict, cls):
-    obj = cls(a=componentDict['raw'], b=componentDict['flat'])
+def RawAndFlatAssembler(dataId, componentInfo, cls):
+    obj = cls(a=componentInfo['raw'].obj, b=componentInfo['flat'].obj)
     return obj
 
-def RawAndFlatDisassembler(obj, dataId, componentDict):
-    componentDict['raw'] = obj.raw
-    componentDict['flat'] = obj.flat
+def RawAndFlatDisassembler(obj, dataId, componentInfo):
+    componentInfo['raw'].obj = obj.raw
+    componentInfo['flat'].obj = obj.flat
