@@ -13,14 +13,9 @@ defaultSubLevels: {
 }
 
 exposures: {
+    # dataset defined in obs_base modified in this mapper as follows:
     raw: {
         template:    "raw/raw_v%(visit)d_f%(filter)s.fits.gz"
-        python:     "lsst.afw.image.DecoratedImageU"
-        persistable:         "DecoratedImageU"
-        storage:     "FitsStorage"
-        level:        "Ccd"
-        tables:        raw
-        tables:        raw_skyTile
     }
     rawAndFlat: {
         python: lsst.obs.test.RawAndFlatContainer
@@ -35,51 +30,21 @@ exposures: {
         assembler:  lsst.obs.test.RawAndFlatAssembler
         disassembler:  lsst.obs.test.RawAndFlatDisassembler
     }
+    # dataset defined in obs_base modified in this mapper as follows:
     postISRCCD: {
         template:    "postISRCCD/postISRCCD_v%(visit)d_f%(filter)s.fits"
-        python:        "lsst.afw.image.ExposureF"
-        persistable:        "ExposureF"
-        storage:    "FitsStorage"
-        level:        "Ccd"
-        tables:        raw
-        tables:        raw_skyTile
     }
-    visitim: {
-        template:      "visitim/visitim_v%(visit)d_f%(filter)s.fits"
-        python:        "lsst.afw.image.ExposureF"
-        persistable:        "ExposureF"
-        storage:    "FitsStorage"
-        level:        "Ccd"
-        tables:        raw
-        tables:        raw_skyTile
-    }
+    # dataset defined in obs_base modified in this mapper as follows:
     icExp: {
         template:      "icExp/icExp_v%(visit)d_f%(filter)s.fits"
-        python:        "lsst.afw.image.ExposureF"
-        persistable:        "ExposureF"
-        storage:    "FitsStorage"
-        level:        "Ccd"
-        tables:        raw
-        tables:        raw_skyTile
     }
+    # dataset defined in obs_base modified in this mapper as follows:
     calexp: {
         template:      "calexp/calexp_v%(visit)d_f%(filter)s.fits"
-        python:        "lsst.afw.image.ExposureF"
-        persistable:        "ExposureF"
-        storage:    "FitsStorage"
-        level:        "Ccd"
-        tables:        raw
-        tables:        raw_skyTile
     }
+    # dataset defined in obs_base modified in this mapper as follows:
     wcs: {
         template:      "wcs/v%(visit)d_f%(filter)s.wcs.fits"
-        python:        "lsst.afw.image.ExposureI"
-        persistable:        "ExposureI"
-        storage:    "FitsStorage"
-        level:        "Ccd"
-        tables:        "raw"
-        tables:        "raw_visit"
-        tables:        "raw_skyTile"
     }
     fcr: {
         template:      "fcr/v%(visit)d_f%(filter)s.fcr.fits"
@@ -173,51 +138,19 @@ datasets: {
     }
     icExpBackground: {
         template:      "icExp/icExpBackground_v%(visit)d_f%(filter)s.fits"
-        python:        "lsst.afw.math.BackgroundList"
-        persistable:   "PurePythonClass"
-        storage:       "FitsCatalogStorage"
-        tables:        raw
-        tables:        raw_skyTile
     }
     calexpBackground: {
         template:      "calexp/v%(visit)d/bkgd.fits"
-        python:        "lsst.afw.math.BackgroundList"
-        persistable:   "PurePythonClass"
-        storage:       "FitsCatalogStorage"
-        tables:        raw
-        tables:        raw_skyTile
     }
     icSrc: {
         template:      "icSrc/v%(visit)d_f%(filter)s.fits"
-        python:        "lsst.afw.table.SourceCatalog"
-        persistable:        "SourceCatalog"
-        storage:    "FitsCatalogStorage"
-        tables:        raw
-        tables:        raw_skyTile
     }
     srcMatch: {
         template:      "srcMatch/v%(visit)d_f%(filter)s.fits"
-        python:        "lsst.afw.table.BaseCatalog"
-        persistable:        "BaseCatalog"
-        storage:    "FitsCatalogStorage"
-        tables:        raw
-        tables:        raw_skyTile
-    }
-    apCorr: {
-        template:      "apCorr/v%(visit)d_f%(filter)s.pickle"
-        python:        "lsst.meas.algorithms.ApertureCorrection"
-        persistable:        "ApertureCorrection"
-        storage:    "PickleStorage"
-        tables:        raw
-        tables:        raw_skyTile
     }
     forced_src: {
         template:      "forced/%(tract)d/v%(visit)d_f%(filter)s.fits"
-        python:        "lsst.afw.table.SourceCatalog"
         persistable:        "SourceCatalog"
-        storage:    "FitsCatalogStorage"
-        tables:        raw
-        tables:        raw_skyTile
     }
     forced_config: {
         template:      "config/forced.py"
@@ -245,11 +178,6 @@ datasets: {
     }
     src: {
         template:      "src/v%(visit)d_f%(filter)s.fits"
-        python:        "lsst.afw.table.SourceCatalog"
-        persistable:        "SourceCatalog"
-        storage:    "FitsCatalogStorage"
-        tables:        raw
-        tables:        raw_skyTile
     }
     transformed_src: {
         template:      "transformed_src/v%(visit)d_f%(filter)s.fits"
@@ -273,43 +201,18 @@ datasets: {
     }
     processCcd_metadata: {
         template:      "processCcd_metadata/v%(visit)d_f%(filter)s.boost"
-        python:        "lsst.daf.base.PropertySet"
-        persistable:        "PropertySet"
-        storage:    "BoostStorage"
-        tables:        raw
-        tables:        raw_skyTile
     }
     isr_config: {
-        template:      "config/isr.py"
         python:        "lsst.ip.isr.IsrTaskConfig"
-        persistable:      "Config"
-        storage:    "ConfigStorage"
-        tables:        raw
-        tables:        raw_skyTile
     }
     isr_metadata: {
         template:      "isr_metadata/v%(visit)d_f%(filter)s.boost"
-        python:        "lsst.daf.base.PropertySet"
-        persistable:        "PropertySet"
-        storage:    "BoostStorage"
-        tables:        raw
-        tables:        raw_skyTile
     }
     characterizeImage_metadata: {
         template:      "characterizeImage_metadata/v%(visit)d_f%(filter)s.boost"
-        python:        "lsst.daf.base.PropertySet"
-        persistable:        "PropertySet"
-        storage:    "BoostStorage"
-        tables:        raw
-        tables:        raw_skyTile
     }
     calibrate_metadata: {
         template:      "calibrate_metadata/v%(visit)d_f%(filter)s.boost"
-        python:        "lsst.daf.base.PropertySet"
-        persistable:        "PropertySet"
-        storage:    "BoostStorage"
-        tables:        raw
-        tables:        raw_skyTile
     }
     transformSrcMeasurement_metadata: {
         template:      "transformSrcMeasurement_metadata/v%(visit)d_f%(filter)s.boost"
