@@ -13,7 +13,6 @@ defaultSubLevels: {
 }
 
 exposures: {
-    # dataset defined in obs_base modified in this mapper as follows:
     raw: {
         template:    "raw/raw_v%(visit)d_f%(filter)s.fits.gz"
     }
@@ -30,19 +29,15 @@ exposures: {
         assembler:  lsst.obs.test.RawAndFlatAssembler
         disassembler:  lsst.obs.test.RawAndFlatDisassembler
     }
-    # dataset defined in obs_base modified in this mapper as follows:
     postISRCCD: {
         template:    "postISRCCD/postISRCCD_v%(visit)d_f%(filter)s.fits"
     }
-    # dataset defined in obs_base modified in this mapper as follows:
     icExp: {
         template:      "icExp/icExp_v%(visit)d_f%(filter)s.fits"
     }
-    # dataset defined in obs_base modified in this mapper as follows:
     calexp: {
         template:      "calexp/calexp_v%(visit)d_f%(filter)s.fits"
     }
-    # dataset defined in obs_base modified in this mapper as follows:
     wcs: {
         template:      "wcs/v%(visit)d_f%(filter)s.wcs.fits"
     }
