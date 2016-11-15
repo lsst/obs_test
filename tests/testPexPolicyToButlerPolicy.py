@@ -73,8 +73,8 @@ class PolicyTestCase(unittest.TestCase):
 
     def testGetStringArray(self):
         policy, pexPolicy = self.loadPolicy()
-        s = policy.asArray('exposures.raw.tables')
-        self.assertEqual(s, ['raw', 'raw_skyTile'])
+        s = policy.asArray('exposures.fcr.tables')
+        self.assertEqual(s, ['raw', 'raw_visit', 'raw_skyTile'])
 
     def testDumpAndLoad(self):
         pafPolicyPath = os.path.join(os.environ['OBS_TEST_DIR'], 'policy', 'testMapper.paf')
