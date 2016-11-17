@@ -12,6 +12,12 @@ defaultLevel: "visit"
 defaultSubLevels: {
 }
 
+# exposures and datasets which are needed for all of the mappers are defined
+# in the obs_base package (in either exposures.yaml or datasets.yaml).
+# Where a modification to such a dataset is required for a particular camera,
+# (e.g., for a template or specialized python type), the modification will
+# appear below as a partial dataset definition.
+
 exposures: {
     raw: {
         template:    "raw/raw_v%(visit)d_f%(filter)s.fits.gz"
@@ -121,12 +127,10 @@ datasets: {
         storage:      "ignored:ampExposureId_bits"
         tables:       "raw"
     }
-    # dataset defined in obs_base modified in this mapper as follows:
     ccdExposureId: {
         # Provide something to import, although we actually return a tuple
         storage:      "ignored:ccdExposureId"
     }
-    # dataset defined in obs_base modified in this mapper as follows:
     ccdExposureId_bits: {
         # Provide something to import, although we actually return a tuple
         storage:      "ignored:ccdExposureId_bits"
@@ -182,7 +186,6 @@ datasets: {
         tables:        raw
         tables:        raw_skyTile
     }
-    # dataset defined in obs_base modified in this mapper as follows:
     transformed_src_schema: {
         persistable:   "ignored"
     }
@@ -217,7 +220,6 @@ datasets: {
         tables:        raw
         tables:        raw_skyTile
     }
-
     other_photo_astro_ref: {
         persistable: SourceCatalog
         python: lsst.afw.table.SourceCatalog
