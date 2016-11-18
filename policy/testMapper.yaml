@@ -10,6 +10,12 @@ defaultLevel: visit
 
 defaultSubLevels: {}
 
+# exposures and datasets which are needed for all of the mappers are defined
+# in the obs_base package (in either exposures.yaml or datasets.yaml).
+# Where a modification to such a dataset is required for a particular camera,
+# (e.g., for a template or specialized python type), the modification will
+# appear below as a partial dataset definition.
+
 exposures:
   calexp:
     template: calexp/calexp_v%(visit)d_f%(filter)s.fits
