@@ -17,22 +17,6 @@ defaultSubLevels: {}
 # appear below as a partial dataset definition.
 
 exposures:
-  calexp:
-    template: calexp/calexp_v%(visit)d_f%(filter)s.fits
-  fcr:
-    level: Ccd
-    persistable: ExposureI
-    python: lsst.afw.image.ExposureI
-    storage: FitsStorage
-    tables:
-    - raw
-    - raw_visit
-    - raw_skyTile
-    template: fcr/v%(visit)d_f%(filter)s.fcr.fits
-  icExp:
-    template: icExp/icExp_v%(visit)d_f%(filter)s.fits
-  postISRCCD:
-    template: postISRCCD/postISRCCD_v%(visit)d_f%(filter)s.fits
   raw:
     template: raw/raw_v%(visit)d_f%(filter)s.fits.gz
   rawAndFlat:
@@ -44,8 +28,24 @@ exposures:
         datasetType: raw
     disassembler: lsst.obs.test.RawAndFlatDisassembler
     python: lsst.obs.test.RawAndFlatContainer
+  postISRCCD:
+    template: postISRCCD/postISRCCD_v%(visit)d_f%(filter)s.fits
+  icExp:
+    template: icExp/icExp_v%(visit)d_f%(filter)s.fits
+  calexp:
+    template: calexp/calexp_v%(visit)d_f%(filter)s.fits
   wcs:
     template: wcs/v%(visit)d_f%(filter)s.wcs.fits
+  fcr:
+    level: Ccd
+    persistable: ExposureI
+    python: lsst.afw.image.ExposureI
+    storage: FitsStorage
+    tables:
+    - raw
+    - raw_visit
+    - raw_skyTile
+    template: fcr/v%(visit)d_f%(filter)s.fcr.fits
 
 calibrations:
   bias:
@@ -78,14 +78,22 @@ calibrations:
     template: fringe/fringe_f%(filter)s.fits.gz
 
 datasets:
-  Mosaic_metadata:
+  test_config:
+    persistable: Config
+    python: lsst.obs.test.TestConfig
+    storage: ConfigStorage
+    tables:
+    - raw
+    - raw_skyTile
+    template: config/test.py
+  test_metadata:
     persistable: PropertySet
     python: lsst.daf.base.PropertySet
     storage: BoostStorage
     tables:
     - raw
     - raw_skyTile
-    template: metadata/Mosaic.boost
+    template: test/v%(visit)d_f%(filter)s.boost
   ampExposureId:
     persistable: ignored
     python: lsst.daf.base.PropertySet
@@ -98,16 +106,21 @@ datasets:
     storage: ignored:ampExposureId_bits
     tables: raw
     template: ignored
-  calexpBackground:
-    template: calexp/v%(visit)d/bkgd.fits
-  calibrate_metadata:
-    template: calibrate_metadata/v%(visit)d_f%(filter)s.boost
   ccdExposureId:
     storage: ignored:ccdExposureId
   ccdExposureId_bits:
     storage: ignored:ccdExposureId_bits
-  characterizeImage_metadata:
-    template: characterizeImage_metadata/v%(visit)d_f%(filter)s.boost
+  icExpBackground:
+    template: icExp/icExpBackground_v%(visit)d_f%(filter)s.fits
+  calexpBackground:
+    template: calexp/v%(visit)d/bkgd.fits
+  icSrc:
+    template: icSrc/v%(visit)d_f%(filter)s.fits
+  srcMatch:
+    template: srcMatch/v%(visit)d_f%(filter)s.fits
+  forced_src:
+    persistable: SourceCatalog
+    template: forced/%(tract)d/v%(visit)d_f%(filter)s.fits
   forced_config:
     persistable: Config
     python: lsst.meas.base.forcedCcd.ForcedCcdMeasurementConfig
@@ -132,53 +145,8 @@ datasets:
     - raw
     - raw_skyTile
     template: schema/forced.fits
-  forced_src:
-    persistable: SourceCatalog
-    template: forced/%(tract)d/v%(visit)d_f%(filter)s.fits
-  icExpBackground:
-    template: icExp/icExpBackground_v%(visit)d_f%(filter)s.fits
-  icSrc:
-    template: icSrc/v%(visit)d_f%(filter)s.fits
-  isr_config:
-    python: lsst.ip.isr.IsrTaskConfig
-  isr_metadata:
-    template: isr_metadata/v%(visit)d_f%(filter)s.boost
-  other_photo_astro_ref:
-    persistable: SourceCatalog
-    python: lsst.afw.table.SourceCatalog
-    storage: FitsCatalogStorage
-    table: ignored
-    template: outher_photo_astro_ref/%(pixel_id)s.fits
-  processCcd_metadata:
-    template: processCcd_metadata/v%(visit)d_f%(filter)s.boost
   src:
     template: src/v%(visit)d_f%(filter)s.fits
-  srcMatch:
-    template: srcMatch/v%(visit)d_f%(filter)s.fits
-  test_config:
-    persistable: Config
-    python: lsst.obs.test.TestConfig
-    storage: ConfigStorage
-    tables:
-    - raw
-    - raw_skyTile
-    template: config/test.py
-  test_metadata:
-    persistable: PropertySet
-    python: lsst.daf.base.PropertySet
-    storage: BoostStorage
-    tables:
-    - raw
-    - raw_skyTile
-    template: test/v%(visit)d_f%(filter)s.boost
-  transformSrcMeasurement_metadata:
-    persistable: PropertySet
-    python: lsst.daf.base.PropertySet
-    storage: BoostStorage
-    tables:
-    - raw
-    - raw_skyTile
-    template: transformSrcMeasurement_metadata/v%(visit)d_f%(filter)s.boost
   transformed_src:
     persistable: ignored
     python: lsst.afw.table.BaseCatalog
@@ -189,4 +157,35 @@ datasets:
     template: transformed_src/v%(visit)d_f%(filter)s.fits
   transformed_src_schema:
     persistable: ignored
-
+  Mosaic_metadata:
+    persistable: PropertySet
+    python: lsst.daf.base.PropertySet
+    storage: BoostStorage
+    tables:
+    - raw
+    - raw_skyTile
+    template: metadata/Mosaic.boost
+  processCcd_metadata:
+    template: processCcd_metadata/v%(visit)d_f%(filter)s.boost
+  isr_config:
+    python: lsst.ip.isr.IsrTaskConfig
+  isr_metadata:
+    template: isr_metadata/v%(visit)d_f%(filter)s.boost
+  characterizeImage_metadata:
+    template: characterizeImage_metadata/v%(visit)d_f%(filter)s.boost
+  calibrate_metadata:
+    template: calibrate_metadata/v%(visit)d_f%(filter)s.boost
+  transformSrcMeasurement_metadata:
+    persistable: PropertySet
+    python: lsst.daf.base.PropertySet
+    storage: BoostStorage
+    tables:
+    - raw
+    - raw_skyTile
+    template: transformSrcMeasurement_metadata/v%(visit)d_f%(filter)s.boost
+  other_photo_astro_ref:
+    persistable: SourceCatalog
+    python: lsst.afw.table.SourceCatalog
+    storage: FitsCatalogStorage
+    table: ignored
+    template: outher_photo_astro_ref/%(pixel_id)s.fits
