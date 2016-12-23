@@ -35,8 +35,8 @@ import lsst.utils.tests
 from lsst.utils import getPackageDir
 
 
-
 class TestCompositeTestCase(unittest.TestCase):
+
     """A test case for composite object i/o."""
 
     def setUp(self):
@@ -58,11 +58,12 @@ class TestCompositeTestCase(unittest.TestCase):
         """
         outputs = (dafPersist.RepositoryArgs(root=self.compositeOutput, tags='composite'),
                    dafPersist.RepositoryArgs(root=self.nonCompositeOutput, tags='noncomposite'))
-        butler = dafPersist.Butler(inputs=dafPersist.RepositoryArgs(root=self.input,
-            mapper='lsst.obs.test.testMapper.TestMapper'), outputs=outputs)
-        rawAndFlat = butler.get('rawAndFlat', dataId={'visit':1, 'filter':'g'})
-        raw = butler.get('raw', dataId={'visit':1, 'filter':'g'})
-        flat = butler.get('flat', dataId={'filter':'g'})
+        butler = dafPersist.Butler(
+            inputs=dafPersist.RepositoryArgs(root=self.input, mapper='lsst.obs.test.testMapper.TestMapper'),
+            outputs=outputs)
+        rawAndFlat = butler.get('rawAndFlat', dataId={'visit': 1, 'filter': 'g'})
+        raw = butler.get('raw', dataId={'visit': 1, 'filter': 'g'})
+        flat = butler.get('flat', dataId={'filter': 'g'})
 
         # verify that the flat & raw loaded by the composite object are correct by loading the non-composite
         # flat & raw, serializing (via pickle) and using filecmp to check that they are the same.
@@ -82,17 +83,16 @@ class TestCompositeTestCase(unittest.TestCase):
             pickle.dump(rawAndFlat.raw, f)
         self.assertTrue(filecmp.cmp(rawPath, compositeRawPath))
 
-        butler.put(rawAndFlat, 'rawAndFlat', dataId=dafPersist.DataId({'visit':1, 'filter':'g'}, tags='composite'))
-        butler.put(raw, 'raw', dataId=dafPersist.DataId({'visit':1, 'filter':'g'}, tags='noncomposite'))
-        butler.put(raw, 'flat', dataId=dafPersist.DataId({'filter':'g'}, tags='noncomposite'))
+        butler.put(rawAndFlat, 'rawAndFlat', dataId=dafPersist.DataId(
+            {'visit': 1, 'filter': 'g'}, tags='composite'))
+        butler.put(raw, 'raw', dataId=dafPersist.DataId({'visit': 1, 'filter': 'g'}, tags='noncomposite'))
+        butler.put(raw, 'flat', dataId=dafPersist.DataId({'filter': 'g'}, tags='noncomposite'))
 
         self.assertTrue(filecmp.cmp(os.path.join(self.compositeOutput, 'raw', 'raw_v1_fg.fits.gz'),
                                     os.path.join(self.nonCompositeOutput, 'raw', 'raw_v1_fg.fits.gz')))
 
         self.assertTrue(filecmp.cmp(os.path.join(self.compositeOutput, 'flat', 'flat_fg.fits.gz'),
                                     os.path.join(self.nonCompositeOutput, 'flat', 'flat_fg.fits.gz')))
-
-
 
 
 class MemoryTester(lsst.utils.tests.MemoryTestCase):
