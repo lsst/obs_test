@@ -29,7 +29,7 @@ from lsst.obs.base import CameraMapper
 from .testCamera import TestCamera
 from .makeTestRawVisitInfo import MakeTestRawVisitInfo
 
-__all__ = ["TestMapper"]
+__all__ = ["TestMapper", "MapperForTestCalexpMetadataObjects"]
 
 
 class TestMapper(CameraMapper):
@@ -101,3 +101,41 @@ class TestMapper(CameraMapper):
         """Make a camera (instance of lsst.afw.cameraGeom.Camera) describing the camera geometry
         """
         return TestCamera()
+
+
+class MapperForTestCalexpMetadataObjects(lsst.obs.base.CameraMapper):
+    packageName = "obs_test"
+
+    def __init__(self, root):
+        policyFilePath = dafPersist.Policy.defaultPolicyFile(
+            self.packageName, "testCalexpMetadataObjects.yaml", "policy")
+        policy = dafPersist.Policy(policyFilePath)
+        super(MapperForTestCalexpMetadataObjects, self).__init__(
+            policy, repositoryDir=root, root=root)
+        self.filterIdMap = {
+            'u': 0, 'g': 1, 'r': 2, 'i': 3, 'z': 4, 'y': 5, 'i2': 5}
+        # The LSST Filters from L. Jones 04/07/10
+        afwImageUtils.defineFilter('u', 364.59)
+        afwImageUtils.defineFilter('g', 476.31)
+        afwImageUtils.defineFilter('r', 619.42)
+        afwImageUtils.defineFilter('i', 752.06)
+        afwImageUtils.defineFilter('z', 866.85)
+        afwImageUtils.defineFilter('y', 971.68, alias=['y4'])  # official y filter
+
+    def _makeCamera(self, policy, repositoryDir):
+        """Normally this makes a camera. For composite testing, we don't need a camera.
+        """
+        return TestCamera()
+
+    def _extractDetectorName(self, dataId):
+        """Normally this extracts the detector (CCD) name from the dataset
+        identifier. The name in question is the detector name used by
+        lsst.afw.cameraGeom.
+
+        We don't need anything meaninful here, so just override so as not to
+        throw (in the base class impl)
+        """
+        return "0"
+
+
+
