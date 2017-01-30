@@ -26,6 +26,8 @@ import lsst.afw.image
 import lsst.daf.persistence as dafPersist
 import lsst.utils.tests
 from lsst.utils import getPackageDir
+import lsst.afw.image.basicUtils as imageBasicUtils
+import math
 import os
 import unittest
 
@@ -39,6 +41,15 @@ class TestCalexpMetadataObjects(unittest.TestCase):
                                   'data',
                                   'calexpMetadataObjectsTest')
 
+    def nanSafeAssertEqual(self, val1, val2):
+        try:
+            self.assertEqual(val1, val2)
+        except AssertionError as err:
+            if math.isnan(val1) and math.isnan(val2):
+               pass
+            else:
+                raise err
+
     def test(self):
         """Get the wcs, calib, and visitInfo from a calexp dataset."""
         butler = dafPersist.Butler(inputs=self.input)
@@ -46,10 +57,36 @@ class TestCalexpMetadataObjects(unittest.TestCase):
         calib = butler.get('calexp_calib', filter='r', immediate=True)
         visitInfo = butler.get('calexp_visitInfo', filter='r', immediate=True)
         calexp = butler.get('calexp', filter='r', immediate=True)
-        self.assertIsInstance(wcs, lsst.afw.image.Wcs)
-        self.assertIsInstance(calib, lsst.afw.image.Calib)
-        self.assertIsInstance(visitInfo, lsst.afw.image.VisitInfo)
         self.assertIsInstance(calexp, lsst.afw.image.ExposureF)
+
+        self.assertIsInstance(wcs, lsst.afw.image.Wcs)
+        self.assertTrue(imageBasicUtils.wcsNearlyEqualOverBBox(wcs, calexp.getWcs(), calexp.getBBox()))
+
+        self.assertIsInstance(calib, lsst.afw.image.Calib)
+        self.assertEqual(calib, calexp.getCalib())
+
+        self.assertIsInstance(visitInfo, lsst.afw.image.VisitInfo)
+
+        self.assertEqual(visitInfo.getExposureId(), calexp.getInfo().getVisitInfo().getExposureId())
+        self.assertEqual(visitInfo.getExposureTime(), calexp.getInfo().getVisitInfo().getExposureTime())
+        self.nanSafeAssertEqual(visitInfo.getDarkTime(), calexp.getInfo().getVisitInfo().getDarkTime())
+        self.assertEqual(visitInfo.getDate(), calexp.getInfo().getVisitInfo().getDate())
+        self.nanSafeAssertEqual(visitInfo.getUt1(), calexp.getInfo().getVisitInfo().getUt1())
+        self.nanSafeAssertEqual(visitInfo.getEra(), calexp.getInfo().getVisitInfo().getEra())
+        self.assertEqual(visitInfo.getBoresightRaDec(), calexp.getInfo().getVisitInfo().getBoresightRaDec())
+        self.assertEqual(visitInfo.getBoresightAzAlt(), calexp.getInfo().getVisitInfo().getBoresightAzAlt())
+        self.assertEqual(visitInfo.getBoresightAirmass(), calexp.getInfo().getVisitInfo().getBoresightAirmass())
+        self.nanSafeAssertEqual(visitInfo.getBoresightRotAngle(),
+                                calexp.getInfo().getVisitInfo().getBoresightRotAngle())
+        self.assertEqual(visitInfo.getRotType(), calexp.getInfo().getVisitInfo().getRotType())
+        self.assertEqual(visitInfo.getObservatory(), calexp.getInfo().getVisitInfo().getObservatory())
+        self.assertEqual(visitInfo.getWeather(), calexp.getInfo().getVisitInfo().getWeather())
+        self.nanSafeAssertEqual(visitInfo.getLocalEra(), calexp.getInfo().getVisitInfo().getLocalEra())
+        self.nanSafeAssertEqual(visitInfo.getBoresightHourAngle(),
+                                calexp.getInfo().getVisitInfo().getBoresightHourAngle())
+
+
+
 
 
 class MemoryTester(lsst.utils.tests.MemoryTestCase):
