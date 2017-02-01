@@ -50,6 +50,23 @@ class TestCalexpMetadataObjects(unittest.TestCase):
             else:
                 raise err
 
+    def testNanSafeAssertEqual(self):
+        val1 = float('nan')
+        val2 = float(123.45)
+        with self.assertRaises(AssertionError):
+            self.nanSafeAssertEqual(val1, val2)
+        val1 = float(123.44)
+        val2 = float(123.45)
+        with self.assertRaises(AssertionError):
+            self.nanSafeAssertEqual(val1, val2)
+        # should not raise:
+        val1 = float('nan')
+        val2 = float('nan')
+        self.nanSafeAssertEqual(val1, val2)
+        val1 = float(123.45)
+        val2 = float(123.45)
+        self.nanSafeAssertEqual(val1, val2)
+
     def test(self):
         """Get the wcs, calib, and visitInfo from a calexp dataset."""
         butler = dafPersist.Butler(inputs=self.input)
