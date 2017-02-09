@@ -1,0 +1,6 @@
+!RepositoryCfg_v1
+_mapper: !!python/name:lsst.obs.test.testMapper.TestMapper ''
+_mapperArgs: null
+_parents: [../a]
+_policy: null
+_root: null
