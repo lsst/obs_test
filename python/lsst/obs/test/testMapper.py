@@ -106,12 +106,12 @@ class TestMapper(CameraMapper):
 class MapperForTestCalexpMetadataObjects(lsst.obs.base.CameraMapper):
     packageName = "obs_test"
 
-    def __init__(self, root):
+    def __init__(self, root, **kwargs):
         policyFilePath = dafPersist.Policy.defaultPolicyFile(
             self.packageName, "testCalexpMetadataObjects.yaml", "policy")
         policy = dafPersist.Policy(policyFilePath)
         super(MapperForTestCalexpMetadataObjects, self).__init__(
-            policy, repositoryDir=root, root=root)
+            policy, repositoryDir=root, root=root, **kwargs)
         self.filterIdMap = {
             'u': 0, 'g': 1, 'r': 2, 'i': 3, 'z': 4, 'y': 5, 'i2': 5}
         # The LSST Filters from L. Jones 04/07/10
@@ -136,6 +136,3 @@ class MapperForTestCalexpMetadataObjects(lsst.obs.base.CameraMapper):
         throw (in the base class impl)
         """
         return "0"
-
-
-
