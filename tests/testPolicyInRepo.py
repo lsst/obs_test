@@ -54,7 +54,7 @@ class PolicyTestCase(unittest.TestCase):
 
         for mapperRoot, actualPolicyPath in testData:
             mapper = lsst.obs.test.TestMapper(root=mapperRoot)
-            repoPolicy = lsst.pex.policy.Policy_createPolicy(actualPolicyPath)
+            repoPolicy = lsst.pex.policy.Policy.createPolicy(actualPolicyPath)
             template = repoPolicy.get('exposures.raw.template')
             mapperTemplate = mapper.mappings['raw'].template
             self.assertEqual(template, mapperTemplate)
@@ -62,7 +62,7 @@ class PolicyTestCase(unittest.TestCase):
             # Run a simple test case to verify that although the package's policy was overloaded with some
             # values, other values specified in the policy file in the package are loaded.
             policyPath = os.path.join(obsTestDir, 'policy', 'testMapper.paf')
-            policy = lsst.pex.policy.Policy_createPolicy(policyPath)
+            policy = lsst.pex.policy.Policy.createPolicy(policyPath)
             template = policy.get('exposures.postISRCCD.template')
             mapperTemplate = mapper.mappings['postISRCCD'].template
             self.assertEqual(template, mapperTemplate)
