@@ -26,6 +26,7 @@ import os
 import unittest
 
 import lsst.pex.policy
+import lsst.daf.persistence as dafPersist
 # we only import lsst.obs.test.TestMapper from lsst.obs.test, but use the namespace to hide it from pytest
 import lsst.obs.test
 import lsst.utils.tests
@@ -39,33 +40,43 @@ class PolicyTestCase(unittest.TestCase):
     def testInRepoPolicyOverrides(self):
         """Verify that the template value specified in the policy file in the repository
         overrides the template value set in the policy file in the package.
-        Checks the _parent symlink chain works.
+        Checks that child repositories do not get the policy from the parent (per specification).
         Checks that values not specified in the local _policy file are set with those of the package's
         _policy file.
         """
+        policyOverride = {'exposures': {'raw': {'template': "raw/v%(visit)d_f%(filter)s.fits.gz"}}}
         obsTestDir = getPackageDir("obs_test")
-        obsTestRepoDir = os.path.join(obsTestDir, "data")
-        testData = (
-            (os.path.join(obsTestRepoDir, 'policyInRepo1/a'),
-                os.path.join(obsTestRepoDir, 'policyInRepo1', 'a', '_parent', '_policy.paf')),
-            (os.path.join(obsTestRepoDir, 'policyInRepo2/a'),
-                os.path.join(obsTestRepoDir, 'policyInRepo2', 'a', '_parent', '_parent', '_policy.paf'))
-        )
+        policyPath = os.path.join(obsTestDir, 'policy', 'testMapper.paf')
+        policy = lsst.pex.policy.Policy.createPolicy(policyPath)
+        postISRCCDtemplate = policy.get('exposures.postISRCCD.template')
 
-        for mapperRoot, actualPolicyPath in testData:
-            mapper = lsst.obs.test.TestMapper(root=mapperRoot)
-            repoPolicy = lsst.pex.policy.Policy.createPolicy(actualPolicyPath)
-            template = repoPolicy.get('exposures.raw.template')
-            mapperTemplate = mapper.mappings['raw'].template
-            self.assertEqual(template, mapperTemplate)
+        testDir = os.path.join(obsTestDir, 'tests', 'policyTest')
+        repoARoot = os.path.join(testDir, 'a')
+        butler = dafPersist.Butler(outputs={'root': repoARoot,
+                                            'mapper': lsst.obs.test.TestMapper,
+                                            'policy': policyOverride})
 
-            # Run a simple test case to verify that although the package's policy was overloaded with some
-            # values, other values specified in the policy file in the package are loaded.
-            policyPath = os.path.join(obsTestDir, 'policy', 'testMapper.paf')
-            policy = lsst.pex.policy.Policy.createPolicy(policyPath)
-            template = policy.get('exposures.postISRCCD.template')
-            mapperTemplate = mapper.mappings['postISRCCD'].template
-            self.assertEqual(template, mapperTemplate)
+        # check that the declared policy got used in the mapper
+        mapper = butler._repos.outputs()[0].repo._mapper
+        self.assertEqual(mapper.mappings['raw'].template, "raw/v%(visit)d_f%(filter)s.fits.gz")
+        # Run a simple test case to verify that although the package's policy was overloaded with some
+        # values, other values specified in the policy file in the package are loaded.
+        self.assertEqual(postISRCCDtemplate, mapper.mappings['postISRCCD'].template)
+        del butler
+        del mapper
+
+        repoBRoot = os.path.join(testDir, 'b')
+        butler = dafPersist.Butler(inputs=repoARoot, outputs=repoBRoot)
+        # check that the reloaded policy got used in the mapper for repo A
+        mapper = butler._repos.inputs()[0].repo._mapper
+        self.assertEqual(mapper.mappings['raw'].template, "raw/v%(visit)d_f%(filter)s.fits.gz")
+        # again, test that another value is loaded from package policy file is loaded correctly.
+        self.assertEqual(postISRCCDtemplate, mapper.mappings['postISRCCD'].template)
+        # also check that repo B does not get the in-repo policy from A
+        mapper = butler._repos.outputs()[0].repo._mapper
+        self.assertNotEqual(mapper.mappings['raw'].template, "raw/v%(visit)d_f%(filter)s.fits.gz")
+        # and again, test that another value is loaded from package policy file is loaded correctly.
+        self.assertEqual(postISRCCDtemplate, mapper.mappings['postISRCCD'].template)
 
 
 class MemoryTester(lsst.utils.tests.MemoryTestCase):
