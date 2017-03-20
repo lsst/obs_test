@@ -57,7 +57,7 @@ class MakeTestRawVisitInfo(MakeRawVisitInfo):
             self.popAngle(md, "DEC_DEG"),
         )
         argDict["boresightAirmass"] = self.popFloat(md, "AIRMASS")
-        argDict["boresightRotAngle"] = 90*degrees - self.popAngle(md, "ROTANG")
+        argDict["boresightRotAngle"] = -self.popAngle(md, "ROTANG")
         argDict["rotType"] = RotType.SKY
         argDict["observatory"] = self.observatory
         argDict["weather"] = Weather(
