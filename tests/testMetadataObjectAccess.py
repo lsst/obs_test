@@ -33,6 +33,7 @@ import unittest
 
 obsTestDir = getPackageDir('obs_test')
 
+
 class TestCalexpMetadataObjects(unittest.TestCase):
     """A test case for getting metadata objects from a Calexp"""
 
@@ -46,7 +47,7 @@ class TestCalexpMetadataObjects(unittest.TestCase):
             self.assertEqual(val1, val2)
         except AssertionError as err:
             if math.isnan(val1) and math.isnan(val2):
-               pass
+                pass
             else:
                 raise err
 
@@ -92,7 +93,8 @@ class TestCalexpMetadataObjects(unittest.TestCase):
         self.nanSafeAssertEqual(visitInfo.getEra(), calexp.getInfo().getVisitInfo().getEra())
         self.assertEqual(visitInfo.getBoresightRaDec(), calexp.getInfo().getVisitInfo().getBoresightRaDec())
         self.assertEqual(visitInfo.getBoresightAzAlt(), calexp.getInfo().getVisitInfo().getBoresightAzAlt())
-        self.assertEqual(visitInfo.getBoresightAirmass(), calexp.getInfo().getVisitInfo().getBoresightAirmass())
+        self.assertEqual(visitInfo.getBoresightAirmass(),
+                         calexp.getInfo().getVisitInfo().getBoresightAirmass())
         self.nanSafeAssertEqual(visitInfo.getBoresightRotAngle(),
                                 calexp.getInfo().getVisitInfo().getBoresightRotAngle())
         self.assertEqual(visitInfo.getRotType(), calexp.getInfo().getVisitInfo().getRotType())
@@ -101,9 +103,6 @@ class TestCalexpMetadataObjects(unittest.TestCase):
         self.nanSafeAssertEqual(visitInfo.getLocalEra(), calexp.getInfo().getVisitInfo().getLocalEra())
         self.nanSafeAssertEqual(visitInfo.getBoresightHourAngle(),
                                 calexp.getInfo().getVisitInfo().getBoresightHourAngle())
-
-
-
 
 
 class MemoryTester(lsst.utils.tests.MemoryTestCase):
