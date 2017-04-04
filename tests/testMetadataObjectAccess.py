@@ -33,7 +33,7 @@ from lsst.utils import getPackageDir
 obsTestDir = getPackageDir('obs_test')
 
 
-class TestCalexpMetadataObjects(unittest.TestCase):
+class TestCalexpMetadataObjects(lsst.utils.tests.TestCase):
     """A test case for getting metadata objects from a Calexp"""
 
     def setUp(self):
@@ -77,7 +77,7 @@ class TestCalexpMetadataObjects(unittest.TestCase):
         self.assertIsInstance(calexp, lsst.afw.image.ExposureF)
 
         self.assertIsInstance(wcs, lsst.afw.image.Wcs)
-        self.assertTrue(imageBasicUtils.wcsNearlyEqualOverBBox(wcs, calexp.getWcs(), calexp.getBBox()))
+        self.assertWcsAlmostEqualOverBBox(wcs, calexp.getWcs(), calexp.getBBox())
 
         self.assertIsInstance(calib, lsst.afw.image.Calib)
         self.assertEqual(calib, calexp.getCalib())
