@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 #
 # LSST Data Management System
 # Copyright 2017 LSST Corporation.
@@ -21,19 +19,21 @@
 # the GNU General Public License along with this program.  If not,
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
+from __future__ import absolute_import, division, print_function
+
+import math
+import os
+import unittest
 
 import lsst.afw.image
 import lsst.daf.persistence as dafPersist
 import lsst.utils.tests
 from lsst.utils import getPackageDir
-import lsst.afw.image.basicUtils as imageBasicUtils
-import math
-import os
-import unittest
 
 obsTestDir = getPackageDir('obs_test')
 
-class TestCalexpMetadataObjects(unittest.TestCase):
+
+class TestCalexpMetadataObjects(lsst.utils.tests.TestCase):
     """A test case for getting metadata objects from a Calexp"""
 
     def setUp(self):
@@ -46,7 +46,7 @@ class TestCalexpMetadataObjects(unittest.TestCase):
             self.assertEqual(val1, val2)
         except AssertionError as err:
             if math.isnan(val1) and math.isnan(val2):
-               pass
+                pass
             else:
                 raise err
 
@@ -77,7 +77,7 @@ class TestCalexpMetadataObjects(unittest.TestCase):
         self.assertIsInstance(calexp, lsst.afw.image.ExposureF)
 
         self.assertIsInstance(wcs, lsst.afw.image.Wcs)
-        self.assertTrue(imageBasicUtils.wcsNearlyEqualOverBBox(wcs, calexp.getWcs(), calexp.getBBox()))
+        self.assertWcsAlmostEqualOverBBox(wcs, calexp.getWcs(), calexp.getBBox())
 
         self.assertIsInstance(calib, lsst.afw.image.Calib)
         self.assertEqual(calib, calexp.getCalib())
@@ -92,7 +92,8 @@ class TestCalexpMetadataObjects(unittest.TestCase):
         self.nanSafeAssertEqual(visitInfo.getEra(), calexp.getInfo().getVisitInfo().getEra())
         self.assertEqual(visitInfo.getBoresightRaDec(), calexp.getInfo().getVisitInfo().getBoresightRaDec())
         self.assertEqual(visitInfo.getBoresightAzAlt(), calexp.getInfo().getVisitInfo().getBoresightAzAlt())
-        self.assertEqual(visitInfo.getBoresightAirmass(), calexp.getInfo().getVisitInfo().getBoresightAirmass())
+        self.assertEqual(visitInfo.getBoresightAirmass(),
+                         calexp.getInfo().getVisitInfo().getBoresightAirmass())
         self.nanSafeAssertEqual(visitInfo.getBoresightRotAngle(),
                                 calexp.getInfo().getVisitInfo().getBoresightRotAngle())
         self.assertEqual(visitInfo.getRotType(), calexp.getInfo().getVisitInfo().getRotType())
@@ -101,9 +102,6 @@ class TestCalexpMetadataObjects(unittest.TestCase):
         self.nanSafeAssertEqual(visitInfo.getLocalEra(), calexp.getInfo().getVisitInfo().getLocalEra())
         self.nanSafeAssertEqual(visitInfo.getBoresightHourAngle(),
                                 calexp.getInfo().getVisitInfo().getBoresightHourAngle())
-
-
-
 
 
 class MemoryTester(lsst.utils.tests.MemoryTestCase):
