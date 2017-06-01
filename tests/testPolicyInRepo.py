@@ -25,7 +25,6 @@
 import os
 import unittest
 
-import lsst.pex.policy
 import lsst.daf.persistence as dafPersist
 # we only import lsst.obs.test.TestMapper from lsst.obs.test, but use the namespace to hide it from pytest
 import lsst.obs.test
@@ -46,8 +45,9 @@ class PolicyTestCase(unittest.TestCase):
         """
         policyOverride = {'exposures': {'raw': {'template': "raw/v%(visit)d_f%(filter)s.fits.gz"}}}
         obsTestDir = getPackageDir("obs_test")
-        policyPath = os.path.join(obsTestDir, 'policy', 'testMapper.paf')
-        policy = lsst.pex.policy.Policy.createPolicy(policyPath)
+        policyPath = os.path.join(obsTestDir, 'policy', 'testMapper.yaml')
+        policy = dafPersist.Policy(policyPath)
+
         postISRCCDtemplate = policy.get('exposures.postISRCCD.template')
 
         testDir = os.path.join(obsTestDir, 'tests', 'policyTest')

@@ -38,7 +38,7 @@ class TestMapper(CameraMapper):
     MakeRawVisitInfoClass = MakeTestRawVisitInfo
 
     def __init__(self, inputPolicy=None, **kwargs):
-        policyFilePath = dafPersist.Policy.defaultPolicyFile(self.packageName, "testMapper.paf", "policy")
+        policyFilePath = dafPersist.Policy.defaultPolicyFile(self.packageName, "testMapper.yaml", "policy")
         policy = dafPersist.Policy(policyFilePath)
 
         self.doFootprints = False
