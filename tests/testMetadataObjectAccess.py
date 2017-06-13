@@ -73,6 +73,7 @@ class TestCalexpMetadataObjects(lsst.utils.tests.TestCase):
         wcs = butler.get('calexp_wcs', filter='r', immediate=True)
         calib = butler.get('calexp_calib', filter='r', immediate=True)
         visitInfo = butler.get('calexp_visitInfo', filter='r', immediate=True)
+        filt = butler.get('calexp_filter', filter='r', immediate=True)
         calexp = butler.get('calexp', filter='r', immediate=True)
         self.assertIsInstance(calexp, lsst.afw.image.ExposureF)
 
@@ -83,6 +84,8 @@ class TestCalexpMetadataObjects(lsst.utils.tests.TestCase):
         self.assertEqual(calib, calexp.getCalib())
 
         self.assertIsInstance(visitInfo, lsst.afw.image.VisitInfo)
+
+        self.assertIsInstance(filt, lsst.afw.image.Filter)
 
         self.assertEqual(visitInfo.getExposureId(), calexp.getInfo().getVisitInfo().getExposureId())
         self.assertEqual(visitInfo.getExposureTime(), calexp.getInfo().getVisitInfo().getExposureTime())
