@@ -30,11 +30,22 @@ import lsst.daf.persistence as dafPersist
 import lsst.obs.test
 import lsst.utils.tests
 from lsst.utils import getPackageDir
+import shutil
 
 
 class PolicyTestCase(unittest.TestCase):
 
     """Tests related to the use of the policy file in Butler/butlerUtils."""
+    obsTestDir = getPackageDir("obs_test")
+    testDir = os.path.join(obsTestDir, 'tests', 'PolicyTestCase')
+    repoARoot = os.path.join(testDir, 'a')
+
+    def setUp(self):
+        self.tearDown()
+
+    def tearDown(self):
+        if os.path.exists(self.testDir):
+            shutil.rmtree(self.testDir)
 
     def testInRepoPolicyOverrides(self):
         """Verify that the template value specified in the policy file in the repository
@@ -44,15 +55,11 @@ class PolicyTestCase(unittest.TestCase):
         _policy file.
         """
         policyOverride = {'exposures': {'raw': {'template': "raw/v%(visit)d_f%(filter)s.fits.gz"}}}
-        obsTestDir = getPackageDir("obs_test")
-        policyPath = os.path.join(obsTestDir, 'policy', 'testMapper.yaml')
+        policyPath = os.path.join(self.obsTestDir, 'policy', 'testMapper.yaml')
         policy = dafPersist.Policy(policyPath)
-
         postISRCCDtemplate = policy.get('exposures.postISRCCD.template')
 
-        testDir = os.path.join(obsTestDir, 'tests', 'policyTest')
-        repoARoot = os.path.join(testDir, 'a')
-        butler = dafPersist.Butler(outputs={'root': repoARoot,
+        butler = dafPersist.Butler(outputs={'root': self.repoARoot,
                                             'mapper': lsst.obs.test.TestMapper,
                                             'policy': policyOverride})
 
@@ -65,8 +72,8 @@ class PolicyTestCase(unittest.TestCase):
         del butler
         del mapper
 
-        repoBRoot = os.path.join(testDir, 'b')
-        butler = dafPersist.Butler(inputs=repoARoot, outputs=repoBRoot)
+        repoBRoot = os.path.join(self.testDir, 'b')
+        butler = dafPersist.Butler(inputs=self.repoARoot, outputs=repoBRoot)
         # check that the reloaded policy got used in the mapper for repo A
         mapper = butler._repos.inputs()[0].repo._mapper
         self.assertEqual(mapper.mappings['raw'].template, "raw/v%(visit)d_f%(filter)s.fits.gz")
