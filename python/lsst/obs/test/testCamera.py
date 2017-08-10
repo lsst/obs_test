@@ -59,10 +59,9 @@ class TestCamera(cameraGeom.Camera):
         radialDistortion = 0.925  # radial distortion in mm/rad^2
         radialCoeff = np.array((0.0, 1.0, 0.0, radialDistortion)) / plateScale.asRadians()
         focalPlaneToField = afwGeom.makeRadialTransform(radialCoeff)
-        fieldToFocalPlane = focalPlaneToField.getInverse()
         cameraTransformMap = cameraGeom.TransformMap(cameraGeom.FOCAL_PLANE,
-                                                     {cameraGeom.FIELD_ANGLE: fieldToFocalPlane})
-        detectorList = self._makeDetectorList(fieldToFocalPlane)
+                                                     {cameraGeom.FIELD_ANGLE: focalPlaneToField})
+        detectorList = self._makeDetectorList(focalPlaneToField)
         cameraGeom.Camera.__init__(self, "test", detectorList, cameraTransformMap)
 
     def _makeDetectorList(self, focalPlaneToField):
