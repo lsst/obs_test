@@ -58,24 +58,26 @@ class TestCamera(cameraGeom.Camera):
         plateScale = afwGeom.Angle(20, afwGeom.arcseconds)  # plate scale, in angle on sky/mm
         radialDistortion = 0.925  # radial distortion in mm/rad^2
         radialCoeff = np.array((0.0, 1.0, 0.0, radialDistortion)) / plateScale.asRadians()
-        focalPlaneToPupil = afwGeom.RadialXYTransform(radialCoeff)
-        pupilToFocalPlane = afwGeom.InvertedXYTransform(focalPlaneToPupil)
-        cameraTransformMap = cameraGeom.CameraTransformMap(cameraGeom.FOCAL_PLANE,
-                                                           {cameraGeom.PUPIL: pupilToFocalPlane})
-        detectorList = self._makeDetectorList(pupilToFocalPlane)
+        focalPlaneToField = afwGeom.makeRadialTransform(radialCoeff)
+        fieldToFocalPlane = focalPlaneToField.getInverse()
+        cameraTransformMap = cameraGeom.TransformMap(cameraGeom.FOCAL_PLANE,
+                                                     {cameraGeom.FIELD_ANGLE: fieldToFocalPlane})
+        detectorList = self._makeDetectorList(fieldToFocalPlane)
         cameraGeom.Camera.__init__(self, "test", detectorList, cameraTransformMap)
 
-    def _makeDetectorList(self, focalPlaneToPupil):
+    def _makeDetectorList(self, focalPlaneToField):
         """Make a list of detectors
 
-        @param[in] focalPlaneToPupil  lsst.afw.geom.XYTransform from FOCAL_PLANE to PUPIL coordinates
+        @param[in] focalPlaneToField  An lsst.afw.geom.TransformPoint2ToPoint2
+            that transforms from FOCAL_PLANE to FIELD_ANGLE coordinates
+            in the forward direction
         @return a list of detectors (lsst.afw.cameraGeom.Detector)
         """
         detectorList = []
         detectorConfigList = self._makeDetectorConfigList()
         for detectorConfig in detectorConfigList:
             ampInfoCatalog = self._makeAmpInfoCatalog()
-            detector = makeDetector(detectorConfig, ampInfoCatalog, focalPlaneToPupil)
+            detector = makeDetector(detectorConfig, ampInfoCatalog, focalPlaneToField)
             detectorList.append(detector)
         return detectorList
 
