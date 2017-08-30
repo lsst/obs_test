@@ -23,6 +23,7 @@
 #
 
 import os
+import tempfile
 import unittest
 
 import lsst.daf.persistence as dafPersist
@@ -33,15 +34,16 @@ from lsst.utils import getPackageDir
 import shutil
 
 
+ROOT = getPackageDir('obs_test')
+
+
 class PolicyTestCase(unittest.TestCase):
 
     """Tests related to the use of the policy file in Butler/butlerUtils."""
-    obsTestDir = getPackageDir("obs_test")
-    testDir = os.path.join(obsTestDir, 'tests', 'PolicyTestCase')
-    repoARoot = os.path.join(testDir, 'a')
 
     def setUp(self):
-        self.tearDown()
+        self.testDir = tempfile.mkdtemp(dir=os.path.join(ROOT, 'tests'), prefix=type(self).__name__+'-')
+        self.repoARoot = os.path.join(self.testDir, 'a')
 
     def tearDown(self):
         if os.path.exists(self.testDir):
@@ -55,7 +57,7 @@ class PolicyTestCase(unittest.TestCase):
         _policy file.
         """
         policyOverride = {'exposures': {'raw': {'template': "raw/v%(visit)d_f%(filter)s.fits.gz"}}}
-        policyPath = os.path.join(self.obsTestDir, 'policy', 'testMapper.yaml')
+        policyPath = os.path.join(ROOT, 'policy', 'testMapper.yaml')
         policy = dafPersist.Policy(policyPath)
         postISRCCDtemplate = policy.get('exposures.postISRCCD.template')
 
