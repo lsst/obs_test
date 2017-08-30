@@ -26,7 +26,9 @@ import filecmp
 import os
 import pickle
 import shutil
+import tempfile
 import unittest
+
 
 from lsst.afw.image.testUtils import makeRampImage
 import lsst.afw.geom as afwGeom
@@ -36,6 +38,7 @@ import lsst.obs.test
 import lsst.utils.tests
 from lsst.utils import getPackageDir
 
+ROOT = getPackageDir('obs_test')
 
 def makeRampDecoratedImage(bbox, start, **metadataDict):
     """Make a DecoratedImageU that is a ramp
@@ -55,16 +58,16 @@ class TestCompositeTestCase(lsst.utils.tests.TestCase):
     """A test case for composite object i/o."""
 
     def setUp(self):
-        obsTestDir = getPackageDir('obs_test')
-        self.input = os.path.join(obsTestDir, 'data', 'input')
-        self.output = os.path.join(obsTestDir, 'tests', 'outputs')
+        self.testDir = tempfile.mkdtemp(dir=os.path.join(ROOT, 'tests'), prefix=type(self).__name__+'-')
+        self.input = os.path.join(ROOT, 'data', 'input')
+        self.output = os.path.join(self.testDir, 'tests', 'outputs')
         self.compositeOutput = os.path.join(self.output, 'composite')
         self.nonCompositeOutput = os.path.join(self.output, 'noncomposite')
         self.dataId = {'visit': 1, 'filter': 'g'}
 
     def tearDown(self):
-        if os.path.exists(self.output):
-            shutil.rmtree(self.output)
+        if os.path.exists(self.testDir):
+            shutil.rmtree(self.testDir)
 
     def testGet(self):
         """Verify that a composite can be loaded and that its components are the same as when the type1
