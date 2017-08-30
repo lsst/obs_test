@@ -4,6 +4,7 @@ config.log
 *.pyc
 *.cfgc
 version.py
+pytest_session.txt
 tests/.tests
 doc/html
 doc/*.tag
