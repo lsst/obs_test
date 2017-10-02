@@ -56,18 +56,24 @@ class TestCamera(cameraGeom.Camera):
         """Construct a TestCamera
         """
         plateScale = afwGeom.Angle(20, afwGeom.arcseconds)  # plate scale, in angle on sky/mm
-        radialDistortion = 0.925  # radial distortion in mm/rad^2
-        radialCoeff = np.array((0.0, 1.0, 0.0, radialDistortion)) / plateScale.asRadians()
-        focalPlaneToField = afwGeom.makeRadialTransform(radialCoeff)
+        # Radial distortion is modeled as a radial polynomial that converts from focal plane (in mm)
+        # to field angle (in radians). Thus the coefficients are:
+        # C0: always 0, for continuity at the center of the focal plane; units are rad
+        # C1: 1/plateScale; units are rad/mm
+        # C2: usually 0; units are rad/mm^2
+        # C3: radial distortion; units are rad/mm^3
+        radialCoeff = np.array([0.0, 1.0, 0.0, 0.925]) / plateScale.asRadians()
+        fieldAngleToFocalPlane = afwGeom.makeRadialTransform(radialCoeff)
+        focalPlaneToFieldAngle = fieldAngleToFocalPlane.getInverse()
         cameraTransformMap = cameraGeom.TransformMap(cameraGeom.FOCAL_PLANE,
-                                                     {cameraGeom.FIELD_ANGLE: focalPlaneToField})
-        detectorList = self._makeDetectorList(focalPlaneToField)
+                                                     {cameraGeom.FIELD_ANGLE: focalPlaneToFieldAngle})
+        detectorList = self._makeDetectorList(focalPlaneToFieldAngle)
         cameraGeom.Camera.__init__(self, "test", detectorList, cameraTransformMap)
 
-    def _makeDetectorList(self, focalPlaneToField):
+    def _makeDetectorList(self, focalPlaneToFieldAngle):
         """Make a list of detectors
 
-        @param[in] focalPlaneToField  An lsst.afw.geom.TransformPoint2ToPoint2
+        @param[in] focalPlaneToFieldAngle  An lsst.afw.geom.TransformPoint2ToPoint2
             that transforms from FOCAL_PLANE to FIELD_ANGLE coordinates
             in the forward direction
         @return a list of detectors (lsst.afw.cameraGeom.Detector)
@@ -76,7 +82,7 @@ class TestCamera(cameraGeom.Camera):
         detectorConfigList = self._makeDetectorConfigList()
         for detectorConfig in detectorConfigList:
             ampInfoCatalog = self._makeAmpInfoCatalog()
-            detector = makeDetector(detectorConfig, ampInfoCatalog, focalPlaneToField)
+            detector = makeDetector(detectorConfig, ampInfoCatalog, focalPlaneToFieldAngle)
             detectorList.append(detector)
         return detectorList
 
