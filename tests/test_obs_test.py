@@ -76,7 +76,7 @@ class TestObsTest(lsst.obs.base.tests.ObsTests, lsst.utils.tests.TestCase):
                               )
 
         path_to_raw = os.path.join(data_dir, "raw", "raw_v1_fg.fits.gz")
-        keys = set(('filter', 'name', 'patch', 'tract', 'visit', 'pixel_id', 'subfilter'))
+        keys = set(('filter', 'name', 'patch', 'tract', 'visit', 'pixel_id', 'subfilter', 'description'))
         query_format = ["visit", "filter"]
         queryMetadata = (({'visit': 1}, [(1, 'g')]),
                          ({'visit': 2}, [(2, 'g')]),
