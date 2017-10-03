@@ -25,7 +25,7 @@ import unittest
 
 import lsst.utils.tests
 from lsst.utils import getPackageDir
-from lsst.afw.geom import Extent2I
+from lsst.afw.geom import arcseconds, Extent2I
 import lsst.obs.base.tests
 import lsst.obs.test
 
@@ -111,6 +111,7 @@ class TestObsTest(lsst.obs.base.tests.ObsTests, lsst.utils.tests.TestCase):
         self.setUp_camera(camera_name='test',
                           n_detectors=1,
                           first_detector_name='0',
+                          plate_scale=20 * arcseconds,
                           )
 
         super(TestObsTest, self).setUp()
