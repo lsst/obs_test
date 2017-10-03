@@ -20,14 +20,17 @@
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
 
+
 class RawAndFlatContainer(object):
     def __init__(self, a, b):
         self.raw = a
         self.flat = b
 
+
 def RawAndFlatAssembler(dataId, componentInfo, cls):
     obj = cls(a=componentInfo['raw'].obj, b=componentInfo['flat'].obj)
     return obj
+
 
 def RawAndFlatDisassembler(obj, dataId, componentInfo):
     componentInfo['raw'].obj = obj.raw

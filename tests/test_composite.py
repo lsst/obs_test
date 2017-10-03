@@ -40,6 +40,7 @@ from lsst.utils import getPackageDir
 
 ROOT = getPackageDir('obs_test')
 
+
 def makeRampDecoratedImage(bbox, start, **metadataDict):
     """Make a DecoratedImageU that is a ramp
     """
