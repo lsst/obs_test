@@ -30,7 +30,8 @@ import sqlite3
 import sys
 
 import lsst.daf.base as dafBase
-import lsst.afw.image as afwImage
+from lsst.afw.fits import readMetadata
+from lsst.afw.geom import makeSkyWcs
 import lsst.skypix as skypix
 
 DefaultOutputRegistry = "registry.sqlite3"
@@ -106,7 +107,7 @@ def processRawDir(rawDir, conn, done, qsp):
             nSkipped += 1
             continue
 
-        md = afwImage.readMetadata(fitsPath)
+        md = readMetadata(fitsPath)
         expTime = md.get("EXPTIME")
         mjdObs = md.get("MJD-OBS")
         taiObs = dafBase.DateTime(mjdObs, dafBase.DateTime.MJD,
@@ -119,7 +120,7 @@ def processRawDir(rawDir, conn, done, qsp):
             id = row[0]
             break
 
-        wcs = afwImage.makeWcs(md)
+        wcs = makeSkyWcs(md)
         poly = skypix.imageToPolygon(wcs,
                                      md.get("NAXIS1"), md.get("NAXIS2"),
                                      padRad=0.000075)  # about 15 arcsec

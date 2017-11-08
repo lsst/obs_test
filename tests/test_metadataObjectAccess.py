@@ -26,6 +26,7 @@ import os
 import unittest
 
 import lsst.afw.image
+from lsst.afw.geom import SkyWcs
 import lsst.daf.persistence as dafPersist
 import lsst.utils.tests
 from lsst.utils import getPackageDir
@@ -77,7 +78,7 @@ class TestCalexpMetadataObjects(lsst.utils.tests.TestCase):
         calexp = butler.get('calexp', immediate=True)
         self.assertIsInstance(calexp, lsst.afw.image.ExposureF)
 
-        self.assertIsInstance(wcs, lsst.afw.image.Wcs)
+        self.assertIsInstance(wcs, SkyWcs)
         self.assertWcsAlmostEqualOverBBox(wcs, calexp.getWcs(), calexp.getBBox())
 
         self.assertIsInstance(calib, lsst.afw.image.Calib)
