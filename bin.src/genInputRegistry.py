@@ -135,6 +135,7 @@ def processRawDir(rawDir, conn, done, qsp):
     print("%s... %d processed, %d skipped, %d unrecognized" %
           (rawDir, nProcessed, nSkipped, nUnrecognized))
 
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Make a registry file for a data repository")
     parser.add_argument("dir", nargs="+", help="one or more directories of data, e.g. data/input")
