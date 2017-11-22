@@ -189,3 +189,9 @@ datasets:
     storage: FitsCatalogStorage
     table: ignored
     template: outher_photo_astro_ref/%(pixel_id)s.fits
+  deepDiff_metadata:
+    template: deepDiff/v%(visit)d_metadata_f%(filter)s.boost
+  deepDiff_diaSrc:
+    template: deepDiff/v%(visit)d_diaSrc_f%(filter)s.fits
+  deepDiff_kernelSrc:
+    template: deepDiff/v%(visit)d_kernelSrc_f%(filter)s.fits
