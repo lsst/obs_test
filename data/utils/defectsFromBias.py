@@ -89,7 +89,7 @@ Output is written to the current directory as file %r, which must not already ex
     args = parser.parse_args()
 
     biasMI = afwImage.MaskedImageF(args.bias)
-    defectList = getDefectListFromMask(biasMI, "BAD", growFootprints=0)
+    defectList = getDefectListFromMask(biasMI, "BAD")
     bboxList = [defect.getBBox() for defect in defectList]
     writeDefectsFile(bboxList, DefectsPath, detectorSerial, detectorName)
     print("wrote defects file %r" % (DefectsPath,))
