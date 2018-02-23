@@ -195,3 +195,5 @@ datasets:
     template: deepDiff/v%(visit)d_diaSrc_f%(filter)s.fits
   deepDiff_kernelSrc:
     template: deepDiff/v%(visit)d_kernelSrc_f%(filter)s.fits
+  apPipe_metadata:
+    template: apPipe_metadata/v%(visit)d_f%(filter)s.boost
