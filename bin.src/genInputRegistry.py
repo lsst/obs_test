@@ -31,8 +31,6 @@ import sys
 
 import lsst.daf.base as dafBase
 from lsst.afw.fits import readMetadata
-from lsst.afw.geom import makeSkyWcs
-import lsst.skypix as skypix
 
 DefaultOutputRegistry = "registry.sqlite3"
 
@@ -66,14 +64,12 @@ def process(dirList, inputRegistry=None, outputRegistry="registry.sqlite3"):
         for row in conn.execute(cmd):
             done[row[0]] = True
 
-    qsp = skypix.createQuadSpherePixelization()
-
     try:
         for dirPath in dirList:
             rawDir = os.path.join(dirPath, "raw")
             if not os.path.exists(rawDir):
                 sys.stderr.write("Could not find raw data dir %r\n" % (rawDir,))
-            processRawDir(rawDir, conn, done, qsp)
+            processRawDir(rawDir, conn, done)
     finally:
         print("Cleaning up...")
         conn.execute("DELETE FROM raw_visit")
@@ -89,7 +85,7 @@ def process(dirList, inputRegistry=None, outputRegistry="registry.sqlite3"):
     print("wrote registry file %r" % (outputRegistry,))
 
 
-def processRawDir(rawDir, conn, done, qsp):
+def processRawDir(rawDir, conn, done):
     print(rawDir, "... started")
     nProcessed = 0
     nSkipped = 0
@@ -115,19 +111,6 @@ def processRawDir(rawDir, conn, done, qsp):
         conn.execute("""INSERT INTO raw VALUES
             (NULL, ?, ?, ?, ?)""",
                      (visit, filterName, taiObs, expTime))
-
-        for row in conn.execute("SELECT last_insert_rowid()"):
-            id = row[0]
-            break
-
-        wcs = makeSkyWcs(md)
-        poly = skypix.imageToPolygon(wcs,
-                                     md.get("NAXIS1"), md.get("NAXIS2"),
-                                     padRad=0.000075)  # about 15 arcsec
-        pix = qsp.intersect(poly)
-        for skyTileId in pix:
-            conn.execute("INSERT INTO raw_skyTile VALUES(?, ?)",
-                         (id, skyTileId))
 
         conn.commit()
 
