@@ -4,7 +4,6 @@ setupRequired(obs_base)
 setupRequired(pex_config)
 setupRequired(pex_policy)
 setupRequired(numpy)
-setupRequired(skypix)
 setupRequired(utils)
 setupRequired(python_future)
 
