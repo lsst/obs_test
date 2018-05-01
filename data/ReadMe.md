@@ -29,15 +29,18 @@ To create the repository database, from the obs_test directory
 To make the obs_test bias image, from the obs_test directory:
 
     setup -r .
-    data/utils/assembleLsstChannels.py /lsst4/krughoff/Tuesday_data/imSim/S12_lsstsim/bias/v0/R22/S00
+    data/utils/assembleLsstChannels.py /lsst4/krughoff/Tuesday_data/imSim/S12_lsstsim/bias/v0/R22/S00 \
+        OBSTYPE=bias DATE-OBS=1999-01-17T05:22:00
     mv image.fits bias.fits
 
 To make obs_test flat images, from the obs_test directory:
 
     setup -r .
-    data/utils/assembleLsstChannels.py /lsst4/krughoff/Tuesday_data/imSim/S12_lsstsim/flat/v2-fg/R22/S00
+    data/utils/assembleLsstChannels.py /lsst4/krughoff/Tuesday_data/imSim/S12_lsstsim/flat/v2-fg/R22/S00 \
+        OBSTYPE=flat DATE-OBS=1999-01-17T05:22:00
     mv image.fits flat_fg.fits
-    data/utils/assembleLsstChannels.py /lsst4/krughoff/Tuesday_data/imSim/S12_lsstsim/flat/v2-fr/R22/S00
+    data/utils/assembleLsstChannels.py /lsst4/krughoff/Tuesday_data/imSim/S12_lsstsim/flat/v2-fr/R22/S00 \
+        OBSTYPE=flat DATE-OBS=1999-01-17T05:22:00
     mv image.fits flat_fr.fits
 
 To make obs_test raw images, from the obs_test directory:
