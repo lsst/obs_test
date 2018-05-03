@@ -22,7 +22,6 @@
 #
 """Assemble a set of LSSTSim channel images into one obs_test image
 """
-from __future__ import absolute_import, division, print_function
 import argparse
 import glob
 import os.path
@@ -56,8 +55,31 @@ def openChannelImage(dirPath, x, y):
     return exposureClass(inImagePath)
 
 
-def assembleImage(dirPath):
+def updateMetadata(metadata, **kwargs):
+    """Fill in missing keywords in an image header.
+
+    metadata : `lsst.daf.base.PropertySet`
+        The header to update.
+    kwargs : `str` to `str`
+        The values of the metadata keys to add to ``metadata`` if no previous value exists.
+    """
+    for key, value in kwargs.items():
+        if not metadata.exists(key):
+            metadata.set(key, value)
+
+
+def assembleImage(dirPath, **kwargs):
     """Make one image by combining half of amplifiers C00, C01, C10, C11 of lsstSim data
+
+    The new image shall be written to a fixed location on disk.
+
+    Parameters
+    ----------
+    dirpath : `str`
+        Directory containing the four images to be combined.
+    kwargs : `str` to `str`
+        Default values for output header keywords. The keyword(s) provided in
+        the input image always takes precedence.
     """
     inExposure = openChannelImage(dirPath, 0, 0)
     fullInDim = inExposure.getDimensions()
@@ -73,7 +95,9 @@ def assembleImage(dirPath):
     if inExposure.hasWcs():
         outExposure.setWcs(inExposure.getWcs())
     outExposure.setFilter(inExposure.getFilter())
-    outExposure.setMetadata(inExposure.getMetadata())
+    metadata = inExposure.getMetadata()
+    updateMetadata(metadata, **kwargs)
+    outExposure.setMetadata(metadata)
     outMI = outExposure.getMaskedImage()
 
     for x in (0, 1):
@@ -98,6 +122,7 @@ def assembleImage(dirPath):
     outExposure.writeFits(OutFileName)
     print("wrote assembled data as %r" % (OutFileName,))
 
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="""Assemble a set of LSSTSim channel images into one obs_test image.
@@ -108,6 +133,8 @@ Output is written to the current directory as file %r, which is OVERWRITTEN if i
     parser.add_argument("dir", default=".", nargs="?",
                         help="directory containing LSSTSim channel images (at least for channels " +
                              "0,0, 0,1, 1,0 and 1,1); defaults to the current working directory.")
+    parser.add_argument("keywords", nargs=argparse.REMAINDER)
     args = parser.parse_args()
+    args.keywords = dict(pair.split("=") for pair in args.keywords)
 
-    assembleImage(args.dir)
+    assembleImage(args.dir, **args.keywords)
