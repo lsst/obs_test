@@ -5,6 +5,5 @@ setupRequired(pex_config)
 setupRequired(pex_policy)
 setupRequired(numpy)
 setupRequired(utils)
-setupRequired(python_future)
 
 envPrepend(PYTHONPATH, ${PRODUCT_DIR}/python)

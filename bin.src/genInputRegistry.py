@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-from __future__ import absolute_import, division, print_function
 #
 # LSST Data Management System
 # Copyright 2008, 2009, 2010, 2011, 2012, 2013 LSST Corporation.
