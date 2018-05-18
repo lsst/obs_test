@@ -94,6 +94,7 @@ def assembleImage(dirPath):
     outDecoImage.writeFits(OutFileName)
     print("wrote assembled data as %r" % (OutFileName,))
 
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="""Assemble a set of LSSTSim raw channel images into one obs_test image.

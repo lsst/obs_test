@@ -67,6 +67,7 @@ def writeDefectsFile(bboxList, path):
     defectsMaskedImage.getMask().writeFits(MaskFileName)
     print("wrote %s with bbox %s" % (MaskFileName, maskBBox,))
 
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="""Make a mask image from a fits table of defects (for any camera).

@@ -78,6 +78,7 @@ def writeDefectsFile(bboxList, path, detectorSerial, detectorName):
     thdulist = pyfits.HDUList([hdu, tbhdu])
     thdulist.writeto(DefectsPath)
 
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="""Construct a defects file from the mask plane of a test camera bias frame.
