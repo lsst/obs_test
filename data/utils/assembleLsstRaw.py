@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 #
 # LSST Data Management System
 # Copyright 2016 LSST Corporation.
@@ -22,7 +22,6 @@
 #
 """Assemble a set of LSSTSim channel images into one obs_test image
 """
-from __future__ import absolute_import, division, print_function
 import argparse
 import glob
 import os.path
@@ -93,6 +92,7 @@ def assembleImage(dirPath):
 
     outDecoImage.writeFits(OutFileName)
     print("wrote assembled data as %r" % (OutFileName,))
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
