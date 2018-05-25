@@ -1,6 +1,4 @@
 # Config override for lsst.pipe.tasks.IngestCalibsTask
-from lsst.obs.test.ingestCalibs import TestCalibsParseTask
-
 config.parse.translation = {'filter': 'FILTER',
                             }
 config.parse.translators = {'calibDate': 'translate_date',
