@@ -103,8 +103,8 @@ def processRawDir(rawDir, conn, done):
             continue
 
         md = readMetadata(fitsPath)
-        expTime = md.get("EXPTIME")
-        mjdObs = md.get("MJD-OBS")
+        expTime = md.getScalar("EXPTIME")
+        mjdObs = md.getScalar("MJD-OBS")
         taiObs = dafBase.DateTime(mjdObs, dafBase.DateTime.MJD,
                                   dafBase.DateTime.TAI).toString(dafBase.DateTime.UTC)[:-1]
         conn.execute("""INSERT INTO raw VALUES
