@@ -24,7 +24,7 @@ import argparse
 import time
 
 import numpy
-import pyfits
+from astropy.io import fits
 
 import lsst.afw.geom as afwGeom
 import lsst.afw.image as afwImage
@@ -38,7 +38,7 @@ detectorSerial = "0000011"
 def getBBoxList(path, detectorName):
     """Read a defects file and return the defects as a list of bounding boxes
     """
-    with pyfits.open(path) as hduList:
+    with fits.open(path) as hduList:
         for hdu in hduList[1:]:
             if hdu.header["name"] != detectorName:
                 print("skipping header with name=%r" % (hdu.header["name"],))
@@ -56,7 +56,7 @@ def getBBoxList(path, detectorName):
 
 
 def writeDefectsFile(bboxList, path, detectorSerial, detectorName):
-    head = pyfits.Header()
+    head = fits.Header()
     head.update('SERIAL', detectorSerial, 'Serial of the detector')
     head.update('NAME', detectorName, 'Name of detector for this defect map')
     head.update('CDATE', time.asctime(time.gmtime()), 'UTC of creation')
@@ -66,21 +66,21 @@ def writeDefectsFile(bboxList, path, detectorSerial, detectorName):
     width = numpy.array([d.getWidth() for d in bboxList])
     height = numpy.array([d.getHeight() for d in bboxList])
 
-    col1 = pyfits.Column(name='x0', format='I', array=numpy.array(x0))
-    col2 = pyfits.Column(name='y0', format='I', array=numpy.array(y0))
-    col3 = pyfits.Column(name='height', format='I', array=numpy.array(height))
-    col4 = pyfits.Column(name='width', format='I', array=numpy.array(width))
-    cols = pyfits.ColDefs([col1, col2, col3, col4])
-    tbhdu = pyfits.new_table(cols, header=head)
-    hdu = pyfits.PrimaryHDU()
-    thdulist = pyfits.HDUList([hdu, tbhdu])
+    col1 = fits.Column(name='x0', format='I', array=numpy.array(x0))
+    col2 = fits.Column(name='y0', format='I', array=numpy.array(y0))
+    col3 = fits.Column(name='height', format='I', array=numpy.array(height))
+    col4 = fits.Column(name='width', format='I', array=numpy.array(width))
+    cols = fits.ColDefs([col1, col2, col3, col4])
+    tbhdu = fits.new_table(cols, header=head)
+    hdu = fits.PrimaryHDU()
+    thdulist = fits.HDUList([hdu, tbhdu])
     thdulist.writeto(DefectsPath)
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="""Construct a defects file from the mask plane of a test camera bias frame.
-To use this command you must setup ip_isr and pyfits.
+To use this command you must setup ip_isr and astropy.
 Output is written to the current directory as file %r, which must not already exist.
 """ % (DefectsPath,)
     )
