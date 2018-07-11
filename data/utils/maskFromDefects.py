@@ -22,7 +22,7 @@
 #
 import argparse
 
-import pyfits
+from astropy.io import fits
 
 import lsst.afw.geom as afwGeom
 import lsst.afw.image as afwImage
@@ -35,7 +35,7 @@ MaskFileName = "defectsMask.fits"
 def getBBoxList(path, detectorName):
     """Get a list of defects as a list of bounding boxes
     """
-    with pyfits.open(path) as hduList:
+    with fits.open(path) as hduList:
         for hdu in hduList[1:]:
             if hdu.header["name"] != detectorName:
                 print("skipping hdu with name=%r" % (hdu.header["name"],))
