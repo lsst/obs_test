@@ -87,8 +87,8 @@ def assembleImage(dirPath, **kwargs):
     if yStart < 0:
         raise RuntimeError("channel image unexpectedly small")
     subDim = afwGeom.Extent2I(fullInDim[0], SizeY)  # dimensions of the portion of a channel that we use
-    inSubBBox = afwGeom.Box2I(afwGeom.Point2I(0, yStart), subDim)
-    outBBox = afwGeom.Box2I(afwGeom.Point2I(0, 0), subDim * 2)
+    inSubBBox = afwGeom.Box2I(afwGeom.Point2I(0, yStart), subDim, invert=False)
+    outBBox = afwGeom.Box2I(afwGeom.Point2I(0, 0), subDim * 2, invert=False)
     outExposure = inExposure.Factory(outBBox)
 
     # copy WCS, filter and other metadata
@@ -115,7 +115,7 @@ def assembleImage(dirPath, **kwargs):
 
             xStart = x * subDim[0]
             yStart = y * subDim[1]
-            outSubBBox = afwGeom.Box2I(afwGeom.Point2I(xStart, yStart), subDim)
+            outSubBBox = afwGeom.Box2I(afwGeom.Point2I(xStart, yStart), subDim, invert=False)
             outMIView = outMI.Factory(outMI, outSubBBox)
             outMIView[:] = inMIView
 

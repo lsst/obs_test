@@ -43,17 +43,15 @@ def getBBoxList(path, detectorName):
 
             bboxList = []
             for data in hdu.data:
-                bbox = afwGeom.Box2I(
-                    afwGeom.Point2I(int(data['x0']), int(data['y0'])),
-                    afwGeom.Extent2I(int(data['width']), int(data['height'])),
-                )
+                bbox = afwGeom.Box2I(afwGeom.Point2I(int(data['x0']), int(data['y0'])),
+                                     afwGeom.Extent2I(int(data['width']), int(data['height'])), invert=False)
                 bboxList.append(bbox)
             return bboxList
         raise RuntimeError("Data not found for detector %r" % (detectorName,))
 
 
 def writeDefectsFile(bboxList, path):
-    maskBBox = afwGeom.Box2I(afwGeom.Point2I(0, 0), afwGeom.Extent2I(1, 1))
+    maskBBox = afwGeom.Box2I(afwGeom.Point2I(0, 0), afwGeom.Extent2I(1, 1), invert=False)
     for box in bboxList:
         maskBBox.include(box)
 

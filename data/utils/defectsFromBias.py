@@ -46,10 +46,9 @@ def getBBoxList(path, detectorName):
 
             bboxList = []
             for data in hdu.data:
-                bbox = afwGeom.Box2I(
-                    afwGeom.Point2I(int(data['x0']), int(data['y0'])),
-                    afwGeom.Extent2I(int(data['width']), int(data['height'])),
-                )
+                bbox = afwGeom.Box2I(afwGeom.Point2I(int(data['x0']), int(data['y0'])),
+                                     afwGeom.Extent2I(int(data['width']), int(data['height'])),
+                                     invert=False)
                 bboxList.append(bbox)
             return bboxList
         raise RuntimeError("Data not found for detector %r" % (detectorName,))

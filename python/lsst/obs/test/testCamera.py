@@ -156,10 +156,8 @@ class TestCamera(cameraGeom.Camera):
                 }[(ampX, ampY)]
                 record = ampCatalog.addNew()
                 record.setName("%d%d" % (ampX, ampY))
-                record.setBBox(afwGeom.Box2I(
-                    afwGeom.Point2I(ampX * xDataExtent, ampY * yDataExtent),
-                    afwGeom.Extent2I(xDataExtent, yDataExtent),
-                ))
+                record.setBBox(afwGeom.Box2I(afwGeom.Point2I(ampX * xDataExtent, ampY * yDataExtent),
+                               afwGeom.Extent2I(xDataExtent, yDataExtent), invert=False))
 
                 x0Raw = ampX * xRawExtent
                 y0Raw = ampY * yRawExtent
@@ -169,18 +167,12 @@ class TestCamera(cameraGeom.Camera):
                 x0Bias = x0Raw
                 x0Data = x0Bias + xBiasExtent
 
-                record.setRawBBox(afwGeom.Box2I(
-                    afwGeom.Point2I(x0Raw, y0Raw),
-                    afwGeom.Extent2I(xRawExtent, yRawExtent),
-                ))
-                record.setRawDataBBox(afwGeom.Box2I(
-                    afwGeom.Point2I(x0Data, y0Raw),
-                    afwGeom.Extent2I(xDataExtent, yDataExtent),
-                ))
-                record.setRawHorizontalOverscanBBox(afwGeom.Box2I(
-                    afwGeom.Point2I(x0Bias, y0Raw),
-                    afwGeom.Extent2I(xBiasExtent, yRawExtent),
-                ))
+                record.setRawBBox(afwGeom.Box2I(afwGeom.Point2I(x0Raw, y0Raw),
+                                                afwGeom.Extent2I(xRawExtent, yRawExtent), invert=False))
+                record.setRawDataBBox(afwGeom.Box2I(afwGeom.Point2I(x0Data, y0Raw),
+                                      afwGeom.Extent2I(xDataExtent, yDataExtent), invert=False))
+                record.setRawHorizontalOverscanBBox(afwGeom.Box2I(afwGeom.Point2I(x0Bias, y0Raw),
+                                                    afwGeom.Extent2I(xBiasExtent, yRawExtent), invert=False))
                 record.setRawXYOffset(afwGeom.Extent2I(x0Raw, y0Raw))
                 record.setReadoutCorner(readCorner)
                 record.setGain(gain)
