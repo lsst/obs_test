@@ -1,10 +1,11 @@
-"""obs_test-specific overrides for the processCcd task
+"""
+Test-specific overrides for the ProcessCcdTask
 """
 import os.path
 from lsst.utils import getPackageDir
 
-configDir = os.path.join(getPackageDir("obs_test"), "config")
-config.isr.load(os.path.join(configDir, 'isr.py'))
+obsConfigDir = os.path.join(getPackageDir("obs_test"), "config")
 
-configDir = os.path.join(getPackageDir("obs_test"), "config")
-config.calibrate.load(os.path.join(configDir, 'calibrate.py'))
+config.isr.load(os.path.join(obsConfigDir, 'isr.py'))
+
+config.calibrate.load(os.path.join(obsConfigDir, 'calibrate.py'))
