@@ -64,7 +64,7 @@ class TestCamera(cameraGeom.Camera):
         # C3: radial distortion; units are rad/mm^3
         radialCoeff = np.array([0.0, 1.0, 0.0, 0.925]) / plateScale.asRadians()
         fieldAngleToFocalPlane = afwGeom.makeRadialTransform(radialCoeff)
-        focalPlaneToFieldAngle = fieldAngleToFocalPlane.getInverse()
+        focalPlaneToFieldAngle = fieldAngleToFocalPlane.inverted()
         cameraTransformMap = cameraGeom.TransformMap(cameraGeom.FOCAL_PLANE,
                                                      {cameraGeom.FIELD_ANGLE: focalPlaneToFieldAngle})
         detectorList = self._makeDetectorList(focalPlaneToFieldAngle)
