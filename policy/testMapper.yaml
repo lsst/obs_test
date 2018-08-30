@@ -89,11 +89,11 @@ datasets:
   test_metadata:
     persistable: PropertySet
     python: lsst.daf.base.PropertySet
-    storage: BoostStorage
+    storage: YamlStorage
     tables:
     - raw
     - raw_skyTile
-    template: test/v%(visit)d_f%(filter)s.boost
+    template: test/v%(visit)d_f%(filter)s.yaml
   ampExposureId:
     persistable: ignored
     python: lsst.daf.base.PropertySet
@@ -132,11 +132,11 @@ datasets:
   forced_metadata:
     persistable: PropertySet
     python: lsst.daf.base.PropertySet
-    storage: BoostStorage
+    storage: YamlStorage
     tables:
     - raw
     - raw_skyTile
-    template: forced_metadata/v%(visit)d_f%(filter)s.boost
+    template: forced_metadata/v%(visit)d_f%(filter)s.yaml
   forced_schema:
     persistable: ignored
     python: lsst.afw.table.SourceCatalog
@@ -160,29 +160,29 @@ datasets:
   Mosaic_metadata:
     persistable: PropertySet
     python: lsst.daf.base.PropertySet
-    storage: BoostStorage
+    storage: YamlStorage
     tables:
     - raw
     - raw_skyTile
-    template: metadata/Mosaic.boost
+    template: metadata/Mosaic.yaml
   processCcd_metadata:
-    template: processCcd_metadata/v%(visit)d_f%(filter)s.boost
+    template: processCcd_metadata/v%(visit)d_f%(filter)s.yaml
   isr_config:
     python: lsst.ip.isr.IsrTaskConfig
   isr_metadata:
-    template: isr_metadata/v%(visit)d_f%(filter)s.boost
+    template: isr_metadata/v%(visit)d_f%(filter)s.yaml
   characterizeImage_metadata:
-    template: characterizeImage_metadata/v%(visit)d_f%(filter)s.boost
+    template: characterizeImage_metadata/v%(visit)d_f%(filter)s.yaml
   calibrate_metadata:
-    template: calibrate_metadata/v%(visit)d_f%(filter)s.boost
+    template: calibrate_metadata/v%(visit)d_f%(filter)s.yaml
   transformSrcMeasurement_metadata:
     persistable: PropertySet
     python: lsst.daf.base.PropertySet
-    storage: BoostStorage
+    storage: YamlStorage
     tables:
     - raw
     - raw_skyTile
-    template: transformSrcMeasurement_metadata/v%(visit)d_f%(filter)s.boost
+    template: transformSrcMeasurement_metadata/v%(visit)d_f%(filter)s.yaml
   other_photo_astro_ref:
     persistable: SourceCatalog
     python: lsst.afw.table.SourceCatalog
@@ -190,13 +190,13 @@ datasets:
     table: ignored
     template: outher_photo_astro_ref/%(pixel_id)s.fits
   deepDiff_metadata:
-    template: deepDiff/v%(visit)d_metadata_f%(filter)s.boost
+    template: deepDiff/v%(visit)d_metadata_f%(filter)s.yaml
   deepDiff_diaSrc:
     template: deepDiff/v%(visit)d_diaSrc_f%(filter)s.fits
   deepDiff_kernelSrc:
     template: deepDiff/v%(visit)d_kernelSrc_f%(filter)s.fits
   apPipe_metadata:
-    template: apPipe_metadata/v%(visit)d_f%(filter)s.boost
+    template: apPipe_metadata/v%(visit)d_f%(filter)s.yaml
   test_plot:
     template: test_plot/v%(visit)d_f%(filter)s.png
     persistable: ignored

@@ -88,7 +88,7 @@ class TestObsTest(lsst.obs.base.tests.ObsTests, lsst.utils.tests.TestCase):
         map_python_type = 'lsst.afw.image.DecoratedImageU'
         map_cpp_type = 'DecoratedImageU'
         map_storage_name = 'FitsStorage'
-        metadata_output_path = os.path.join('processCcd_metadata', 'v1_fg.boost')
+        metadata_output_path = os.path.join('processCcd_metadata', 'v1_fg.yaml')
         raw_filename = 'raw_v1_fg.fits.gz'
         default_level = 'visit'
         raw_levels = (('skyTile', set(['filter'])),
