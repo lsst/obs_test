@@ -78,6 +78,11 @@ calibrations:
     template: fringe/fringe_f%(filter)s.fits.gz
 
 datasets:
+  rawMetadataDirect:  # metadata associated with raw, but not using _md hooks
+    template: raw/raw_v%(visit)d_f%(filter)s.fits.gz
+    python: lsst.daf.base.PropertyList
+    persistable: PropertyList
+    storage: FitsStorage
   test_config:
     persistable: Config
     python: lsst.obs.test.TestConfig
