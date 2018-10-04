@@ -33,7 +33,15 @@ MaskFileName = "defectsMask.fits"
 
 
 def getBBoxList(path, detectorName):
-    """Get a list of defects as a list of bounding boxes
+    """Read a defects file and return the defects as a list of bounding
+    boxes.
+
+    Parameters
+    ---------
+    path : `str`
+        Path to input defects file; a fits file.
+    detectorName : `str`
+        Name of detector.
     """
     with fits.open(path) as hduList:
         for hdu in hduList[1:]:
@@ -53,6 +61,15 @@ def getBBoxList(path, detectorName):
 
 
 def writeDefectsFile(bboxList, path):
+    """Write a mask image from a fits table of defects.
+
+    Parameters
+    ----------
+    bboxList : `list` of `lsst.geom.Box2I`
+        List of bounding boxes defining defect locations.
+    path : `str`
+        Path of output defects file; should end with ".fits".
+    """
     maskBBox = afwGeom.Box2I(afwGeom.Point2I(0, 0), afwGeom.Extent2I(1, 1))
     for box in bboxList:
         maskBBox.include(box)

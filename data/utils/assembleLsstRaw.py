@@ -33,7 +33,9 @@ import lsst.afw.geom as afwGeom
 import lsst.afw.image as afwImage
 
 OutFileName = "raw.fits"
-SizeY = 1000  # number of pixels per amplifier in X direction (Y uses all pixels)
+"""Output file name."""
+SizeY = 1000
+"""Number of pixels per amplifier in X direction (Y uses all pixels)."""
 
 
 def openChannelImage(dirPath, x, y):

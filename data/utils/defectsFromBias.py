@@ -31,12 +31,23 @@ import lsst.afw.image as afwImage
 from lsst.ip.isr import getDefectListFromMask
 
 DefectsPath = "defects_c0.fits"
+"""Output path for defects file."""
 detectorName = "0"
+"""Detector name."""
 detectorSerial = "0000011"
+"""Detector serial code"""
 
 
 def getBBoxList(path, detectorName):
-    """Read a defects file and return the defects as a list of bounding boxes
+    """Read a defects file and return the defects as a list of bounding
+    boxes.
+
+    Parameters
+    ---------
+    path : `str`
+        Path to input defects file; a fits file.
+    detectorName : `str`
+        Name of detector.
     """
     with fits.open(path) as hduList:
         for hdu in hduList[1:]:
@@ -56,6 +67,19 @@ def getBBoxList(path, detectorName):
 
 
 def writeDefectsFile(bboxList, path, detectorSerial, detectorName):
+    """Write a defects FITS file.
+
+    Parameters
+    ----------
+    bboxList : `list` of `lsst.geom.Box2I`
+        List of bounding boxes defining defect locations.
+    path : `str`
+        Path of output defects file; should end with ".fits".
+    detectorSerial : `str`
+        Serial code of detector.
+    detectorName : `str`
+        Name of detector.
+    """
     head = fits.Header()
     head.update('SERIAL', detectorSerial, 'Serial of the detector')
     head.update('NAME', detectorName, 'Name of detector for this defect map')

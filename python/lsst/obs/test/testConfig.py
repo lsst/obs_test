@@ -25,6 +25,8 @@ __all__ = ["TestConfig"]
 
 
 class TestConfig(pexConfig.Config):
+    """Config intended for unit tests.
+    """
     floatField = pexConfig.Field(doc="float field", dtype=float, default=3.1)
     strField = pexConfig.Field(doc="str field", dtype=str, default="default for strField")
     doFail = pexConfig.Field(doc="should the task fail?", dtype=bool, default=False)

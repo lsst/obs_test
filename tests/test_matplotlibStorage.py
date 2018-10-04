@@ -24,7 +24,8 @@ import os
 import tempfile
 import unittest
 
-# we only import lsst.obs.test.TestMapper from lsst.obs.test, but use the namespace to hide it from pytest
+# we only import lsst.obs.test.TestMapper from lsst.obs.test,
+# but use the namespace to hide it from pytest
 import lsst.obs.test
 import lsst.utils.tests
 from lsst.utils import getPackageDir
@@ -48,6 +49,7 @@ class MatplotlibStorageTestCase(lsst.utils.tests.TestCase):
             shutil.rmtree(self.testDir)
 
     def testWriteFigure(self):
+        """Test writing a matpotlib figure to a repository."""
         import matplotlib
         matplotlib.use("Agg")
         from matplotlib import pyplot

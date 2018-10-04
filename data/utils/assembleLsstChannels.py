@@ -33,12 +33,13 @@ import lsst.afw.geom as afwGeom
 import lsst.afw.image as afwImage
 
 OutFileName = "image.fits"
-SizeY = 1000  # number of pixels per amplifier in X direction (Y uses all pixels)
+"""Output file name."""
+SizeY = 1000
+"""Number of pixels per amplifier in X direction (Y uses all pixels)."""
 
 
 def openChannelImage(dirPath, x, y):
-    """Open an LSSTSim channel image
-    """
+    """Open an LSSTSim channel image."""
     globStr = os.path.join(dirPath, "imsim_*_R22_S00_C%d%d*" % (y, x))
     inImagePathList = glob.glob(globStr)
     if len(inImagePathList) != 1:
@@ -58,10 +59,13 @@ def openChannelImage(dirPath, x, y):
 def updateMetadata(metadata, **kwargs):
     """Fill in missing keywords in an image header.
 
+    Parameters
+    ----------
     metadata : `lsst.daf.base.PropertySet`
         The header to update.
     kwargs : `str` to `str`
-        The values of the metadata keys to add to ``metadata`` if no previous value exists.
+        The values of the metadata keys to add to ``metadata``
+        if no previous value exists.
     """
     for key, value in kwargs.items():
         if not metadata.exists(key):
@@ -69,7 +73,8 @@ def updateMetadata(metadata, **kwargs):
 
 
 def assembleImage(dirPath, **kwargs):
-    """Make one image by combining half of amplifiers C00, C01, C10, C11 of lsstSim data
+    """Make one image by combining half of amplifiers C00, C01, C10, C11
+    of lsstSim data.
 
     The new image shall be written to a fixed location on disk.
 
@@ -78,15 +83,16 @@ def assembleImage(dirPath, **kwargs):
     dirpath : `str`
         Directory containing the four images to be combined.
     kwargs : `str` to `str`
-        Default values for output header keywords. The keyword(s) provided in
-        the input image always takes precedence.
+        Default values for output header keywords. The keyword(s) provided
+        in the input image always takes precedence.
     """
     inExposure = openChannelImage(dirPath, 0, 0)
     fullInDim = inExposure.getDimensions()
     yStart = fullInDim[1] - SizeY
     if yStart < 0:
         raise RuntimeError("channel image unexpectedly small")
-    subDim = afwGeom.Extent2I(fullInDim[0], SizeY)  # dimensions of the portion of a channel that we use
+    # dimensions of the portion of a channel that we use
+    subDim = afwGeom.Extent2I(fullInDim[0], SizeY)
     inSubBBox = afwGeom.Box2I(afwGeom.Point2I(0, yStart), subDim)
     outBBox = afwGeom.Box2I(afwGeom.Point2I(0, 0), subDim * 2)
     outExposure = inExposure.Factory(outBBox)

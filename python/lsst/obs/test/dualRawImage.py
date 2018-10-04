@@ -20,6 +20,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+__all__ = ["RawAndFlatContainer", "RawAndFlatAssembler", "RawAndFlatDisassembler"]
+
 
 class RawAndFlatContainer(object):
     def __init__(self, a, b):
