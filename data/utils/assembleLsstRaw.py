@@ -102,7 +102,7 @@ Output is written to the current directory as file %r, which is OVERWRITTEN if i
 """ % (OutFileName,),
     )
     parser.add_argument("dir", default=".", nargs="?",
-                        help="directory containing LSSTSim channel images (at least for channels " +
+                        help="directory containing LSSTSim channel images (at least for channels "
                              "0,0, 0,1, 1,0 and 1,1); defaults to the current working directory.")
     args = parser.parse_args()
 
