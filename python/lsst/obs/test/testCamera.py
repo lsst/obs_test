@@ -19,6 +19,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
+__all__ = ["TestCamera"]
+
 import numpy as np
 
 import lsst.afw.cameraGeom as cameraGeom
@@ -26,8 +28,6 @@ import lsst.afw.geom as afwGeom
 from lsst.afw.table import AmpInfoCatalog, AmpInfoTable, LL
 from lsst.afw.cameraGeom import NullLinearityType
 from lsst.afw.cameraGeom.cameraFactory import makeDetector
-
-__all__ = ["TestCamera"]
 
 
 class TestCamera(cameraGeom.Camera):

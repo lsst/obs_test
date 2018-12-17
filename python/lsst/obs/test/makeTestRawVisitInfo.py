@@ -19,13 +19,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
+__all__ = ["MakeTestRawVisitInfo"]
 
 from lsst.afw.image import VisitInfo, RotType
 from lsst.afw.geom import degrees, SpherePoint
 from lsst.afw.coord import Observatory, Weather
 from lsst.obs.base import MakeRawVisitInfo
-
-__all__ = ["MakeTestRawVisitInfo"]
 
 
 class MakeTestRawVisitInfo(MakeRawVisitInfo):

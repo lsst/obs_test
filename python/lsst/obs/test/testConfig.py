@@ -19,9 +19,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-import lsst.pex.config as pexConfig
-
 __all__ = ["TestConfig"]
+
+import lsst.pex.config as pexConfig
 
 
 class TestConfig(pexConfig.Config):

@@ -19,6 +19,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
+__all__ = ["TestMapper", "MapperForTestCalexpMetadataObjects"]
 
 import os
 
@@ -28,8 +29,6 @@ import lsst.daf.persistence as dafPersist
 from lsst.obs.base import CameraMapper
 from .testCamera import TestCamera
 from .makeTestRawVisitInfo import MakeTestRawVisitInfo
-
-__all__ = ["TestMapper", "MapperForTestCalexpMetadataObjects"]
 
 
 class TestMapper(CameraMapper):
