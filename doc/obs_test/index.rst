@@ -1,27 +1,22 @@
-.. _obs_test-package:
-
-.. Title is the EUPS package name
+.. py::currentmodule:: lsst.obs.test
 
 ########
 obs_test
 ########
 
-.. Add a sentence/short paragraph describing what the package is for.
+The ``obs_test`` package provides a simple package to test the ``obs`` package framework and camera descriptions.
 
-The ``obs_test`` package provides a simple package to test the ``obs``-package framework and camera descriptions.
+A small repository of test data (raw images and calibration data) is available in ``data/input``.
 
-Project info
+Contributing
 ============
 
-Repository
-   https://github.com/lsst/obs_test
+``obs_test`` is developed at https://github.com/lsst/obs_test.
+You can find Jira issues for this module under the `obs_test <https://jira.lsstcorp.org/issues/?jql=project%20%3D%20DM%20AND%20component%20%3D%20obs_test>`_ component.
 
-JIRA component
-   `obs_test <https://jira.lsstcorp.org/issues/?jql=project%20%3D%20DM%20AND%20component%20%3D%20obs_test>`_
+Python API reference
+====================
 
-Modules
-=======
-
-.. Link to Python module landing pages (same as in manifest.yaml)
-
-- :ref:`lsst.obs.test <lsst.obs.test>`
+.. automodapi:: lsst.obs.test
+    :no-main-docstr:
+    :no-inheritance-diagram:
