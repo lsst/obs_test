@@ -19,6 +19,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
+__all__ = ["TestCamera"]
+
 import numpy as np
 
 import lsst.afw.cameraGeom as cameraGeom
@@ -27,34 +29,35 @@ from lsst.afw.table import AmpInfoCatalog, AmpInfoTable, LL
 from lsst.afw.cameraGeom import NullLinearityType
 from lsst.afw.cameraGeom.cameraFactory import makeDetector
 
-__all__ = ["TestCamera"]
-
 
 class TestCamera(cameraGeom.Camera):
-    """A simple test Camera
+    """A simple test Camera.
 
-    There is one ccd with name "0"
-    It has four amplifiers with names "00", "01", "10", and "11"
+    Notes
+    -----
+    The camera has one ccd with name "0".
+    That CCD has four amplifiers with names "00", "01", "10", and "11".
 
-    The camera is modeled after a small portion of the LSST sim Summer 2012 camera:
-    a single detector with four amplifiers, consisting of
-    raft 2,2 sensor 0,0, half of channels 0,0 0,1 1,0 and 1,1 (the half closest to the Y centerline)
+    The camera is modeled after a small portion of the LSST sim
+    Summer 2012 camera: a single detector with four amplifiers,
+    consisting of raft 2,2 sensor 0,0, half of channels 0,0 0,1 1,0 and 1,1
+    (the half closest to the Y centerline).
 
-    Note that the Summer 2012 camera has one very weird feature: the bias region
-    (rawHOverscanBbox) is actually a prescan (appears before the data pixels).
+    Note that the Summer 2012 camera has one very weird feature:
+    the bias region (rawHOverscanBbox) is actually a prescan
+    (it appears before the data pixels).
 
-    A raw image has the sky in the same orientation on all amplifier subregions,
-    so no amplifier subregions need their pixels to be flipped.
+    A raw image has the sky in the same orientation on all amplifier
+    subregions, so no amplifier subregions need their pixels to be flipped.
 
     Standard keys are:
-    amp: amplifier number: one of 00, 01, 10, 11
-    ccd: ccd number: always 0
-    visit: exposure number; test data includes one exposure with visit=1
-    """
 
+    * ``amp``: amplifier number: one of 00, 01, 10, 11
+    * ``ccd``: ccd number: always 0
+    * ``visit``: exposure number; test data includes one exposure
+        with visit=1
+    """
     def __init__(self):
-        """Construct a TestCamera
-        """
         plateScale = afwGeom.Angle(20, afwGeom.arcseconds)  # plate scale, in angle on sky/mm
         # Radial distortion is modeled as a radial polynomial that converts from focal plane (in mm)
         # to field angle (in radians). Thus the coefficients are:
@@ -73,10 +76,16 @@ class TestCamera(cameraGeom.Camera):
     def _makeDetectorList(self, focalPlaneToFieldAngle):
         """Make a list of detectors
 
-        @param[in] focalPlaneToFieldAngle  An lsst.afw.geom.TransformPoint2ToPoint2
-            that transforms from FOCAL_PLANE to FIELD_ANGLE coordinates
-            in the forward direction
-        @return a list of detectors (lsst.afw.cameraGeom.Detector)
+        Parameters
+        ----------
+        focalPlaneToFieldAngle : `lsst.afw.geom.TransformPoint2ToPoint2`
+            Transform from ``FOCAL_PLANE`` to ``FIELD_ANGLE`` coordinates
+            in the forward direction.
+
+        Returns
+        -------
+        detectorList : `list` of `lsst.afw.cameraGeom.Detector`
+            List of detectors.
         """
         detectorList = []
         detectorConfigList = self._makeDetectorConfigList()
@@ -89,7 +98,10 @@ class TestCamera(cameraGeom.Camera):
     def _makeDetectorConfigList(self):
         """Make a list of detector configs
 
-        @return a list of detector configs (lsst.afw.cameraGeom.DetectorConfig)
+        Returns
+        -------
+        detectorConfigList : `list` of `lsst.afw.cameraGeom.DetectorConfig`
+            List of detector configs.
         """
         # this camera has one detector that corresponds to a subregion of lsstSim detector R:2,2 S:0,0
         # with lower left corner 0, 1000 and dimensions 1018 x 2000
@@ -120,6 +132,13 @@ class TestCamera(cameraGeom.Camera):
     def _makeAmpInfoCatalog(self):
         """Construct an amplifier info catalog
 
+        Returns
+        -------
+        ampInfoCatalog : `lsst.afw.table.AmpInfoCatalog`
+            Amplifier information catalog.
+
+        Notes
+        -----
         The LSSTSim S12 amplifiers are unusual in that they start with 4 pixels
         of usable bias region (which is used to set rawHOverscanBbox, despite the name),
         followed by the data. There is no other underscan or overscan.
@@ -137,7 +156,7 @@ class TestCamera(cameraGeom.Camera):
         schema = AmpInfoTable.makeMinimalSchema()
 
         self.ampInfoDict = {}
-        ampCatalog = AmpInfoCatalog(schema)
+        ampInfoCatalog = AmpInfoCatalog(schema)
         for ampX in (0, 1):
             for ampY in (0, 1):
                 # amplifier gain (e-/ADU) and read noiuse (ADU/pixel) from lsstSim raw data
@@ -154,7 +173,7 @@ class TestCamera(cameraGeom.Camera):
                     (1, 0): 4.02753931932633,   # C0,1
                     (1, 1): 4.1890610691135,    # C1,1
                 }[(ampX, ampY)]
-                record = ampCatalog.addNew()
+                record = ampInfoCatalog.addNew()
                 record.setName("%d%d" % (ampX, ampY))
                 record.setBBox(afwGeom.Box2I(
                     afwGeom.Point2I(ampX * xDataExtent, ampY * yDataExtent),
@@ -194,4 +213,4 @@ class TestCamera(cameraGeom.Camera):
                 record.setRawFlipY(False)
                 record.setRawVerticalOverscanBBox(afwGeom.Box2I())  # no vertical overscan
                 record.setRawPrescanBBox(afwGeom.Box2I())  # no horizontal prescan
-        return ampCatalog
+        return ampInfoCatalog

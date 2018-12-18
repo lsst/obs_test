@@ -31,6 +31,8 @@ import lsst.obs.test
 
 
 class TestObsTest(lsst.obs.base.tests.ObsTests, lsst.utils.tests.TestCase):
+    """Run standard obs_base unit tests.
+    """
     def setUp(self):
         product_dir = getPackageDir('obs_test')
         data_dir = os.path.join(product_dir, 'data', 'input')

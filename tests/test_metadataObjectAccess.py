@@ -34,8 +34,7 @@ obsTestDir = getPackageDir('obs_test')
 
 
 class TestCalexpMetadataObjects(lsst.utils.tests.TestCase):
-    """A test case for getting metadata objects from a Calexp"""
-
+    """Test getting metadata objects from a calexp."""
     def setUp(self):
         self.input = os.path.join(obsTestDir,
                                   'data',

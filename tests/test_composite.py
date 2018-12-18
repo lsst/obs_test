@@ -40,8 +40,7 @@ ROOT = getPackageDir('obs_test')
 
 
 def makeRampDecoratedImage(bbox, start, **metadataDict):
-    """Make a DecoratedImageU that is a ramp
-    """
+    """Make a DecoratedImageU that is a ramp."""
     rampArr = makeRampImage(bbox=bbox, start=start, imageClass=afwImage.ImageU).getArray()
     decoratedImage = afwImage.DecoratedImageU(bbox)
     imarr = decoratedImage.getImage().getArray()
@@ -53,9 +52,7 @@ def makeRampDecoratedImage(bbox, start, **metadataDict):
 
 
 class TestCompositeTestCase(lsst.utils.tests.TestCase):
-
-    """A test case for composite object i/o."""
-
+    """A test case for composite object I/0."""
     def setUp(self):
         self.testDir = tempfile.mkdtemp(dir=os.path.join(ROOT, 'tests'), prefix=type(self).__name__+'-')
         self.input = os.path.join(ROOT, 'data', 'input')
@@ -69,8 +66,7 @@ class TestCompositeTestCase(lsst.utils.tests.TestCase):
             shutil.rmtree(self.testDir)
 
     def testGet(self):
-        """Verify that a composite can be loaded and that its components are the same as when the type1
-        components are loaded individually (verifies correct lookup in this case).
+        """Verify get of individual components vs a composite.
         """
         butler = dafPersist.Butler(
             inputs=dafPersist.RepositoryArgs(root=self.input, mapper='lsst.obs.test.testMapper.TestMapper'),
@@ -85,11 +81,13 @@ class TestCompositeTestCase(lsst.utils.tests.TestCase):
         self.assertEqual(pickle.dumps(flat), pickle.dumps(rawAndFlat.flat))
 
     def testPut(self):
-        """Verify that when the individual components are put and when the composite is put (which
-        disassembles into individual components) that the objects that are written are the same.
+        """Compare put of individual components vs a composite.
 
-        Note that raw and calibration frames do not round trip (they are saved as DecoratedImageU
-        and read in as ExposureU), so create the raw and flat manually.
+        Notes
+        -----
+        Raw and calibration frames do not round trip (they are saved as
+        DecoratedImageU and read in as ExposureU), so create the raw
+        and flat manually.
         """
         outputs = (dafPersist.RepositoryArgs(root=self.compositeOutput, tags='composite'),
                    dafPersist.RepositoryArgs(root=self.nonCompositeOutput, tags='noncomposite'))

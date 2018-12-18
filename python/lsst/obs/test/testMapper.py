@@ -19,6 +19,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
+__all__ = ["TestMapper", "MapperForTestCalexpMetadataObjects"]
 
 import os
 
@@ -29,10 +30,10 @@ from lsst.obs.base import CameraMapper
 from .testCamera import TestCamera
 from .makeTestRawVisitInfo import MakeTestRawVisitInfo
 
-__all__ = ["TestMapper", "MapperForTestCalexpMetadataObjects"]
-
 
 class TestMapper(CameraMapper):
+    """Camera mapper for the Test camera.
+    """
     packageName = 'obs_test'
 
     MakeRawVisitInfoClass = MakeTestRawVisitInfo
@@ -66,8 +67,21 @@ class TestMapper(CameraMapper):
 
     def _defectLookup(self, dataId):
         """Find the defects for a given CCD.
-        @param dataId (dict) Dataset identifier
-        @return (string) path to the defects file or None if not available
+
+        Parameters
+        ----------
+        dataId : `dict`
+            Dataset identifier
+
+        Returns
+        -------
+        result : `str`
+            Path to the defects file.
+
+        Raises
+        ------
+        RuntimeError
+            If ``obs_test`` is not setup.
         """
         obsTestDir = lsst.utils.getPackageDir('obs_test')
 
@@ -76,7 +90,10 @@ class TestMapper(CameraMapper):
     def _computeCcdExposureId(self, dataId):
         """Compute the 64-bit (long) identifier for a CCD exposure.
 
-        @param dataId (dict) Data identifier with visit
+        Parameters
+        ----------
+        dataId : `dict`
+            Data identifier with visit
         """
         visit = dataId['visit']
         return int(visit)
@@ -98,12 +115,21 @@ class TestMapper(CameraMapper):
         return propertyList
 
     def _makeCamera(self, policy, repositoryDir):
-        """Make a camera (instance of lsst.afw.cameraGeom.Camera) describing the camera geometry
+        """Make a camera describing the camera geometry.
+
+        Returns
+        -------
+        testCamera : `TestCamera`
+            Test camera.
         """
         return TestCamera()
 
 
 class MapperForTestCalexpMetadataObjects(lsst.obs.base.CameraMapper):
+    """Minimal mapper for testing calexp composite access, e.g. calexp_wcs.
+
+    Used by test_metadataObjectAccess.py.
+    """
     packageName = "obs_test"
 
     def __init__(self, root, parentRegistry=None, repositoryCfg=None):

@@ -36,9 +36,8 @@ ROOT = getPackageDir('obs_test')
 
 
 class PolicyTestCase(unittest.TestCase):
-
-    """Tests related to the use of the policy file in Butler/butlerUtils."""
-
+    """Tests related to the use of the policy file in Butler/butlerUtils.
+    """
     def setUp(self):
         self.testDir = tempfile.mkdtemp(dir=os.path.join(ROOT, 'tests'), prefix=type(self).__name__+'-')
         self.repoARoot = os.path.join(self.testDir, 'a')
@@ -48,11 +47,18 @@ class PolicyTestCase(unittest.TestCase):
             shutil.rmtree(self.testDir)
 
     def testInRepoPolicyOverrides(self):
-        """Verify that the template value specified in the policy file in the repository
-        overrides the template value set in the policy file in the package.
-        Checks that child repositories do not get the policy from the parent (per specification).
-        Checks that values not specified in the local _policy file are set with those of the package's
-        _policy file.
+        """Test policy file overrides.
+
+        Notes
+        -----
+        Verify that the template value specified in the policy file in
+        the repository overrides the template value set in the policy file
+        in the package.
+
+        Checks that child repositories do not get the policy from the
+        parent (per specification).
+        Checks that values not specified in the local _policy file are set
+        with those of the package's _policy file.
         """
         policyOverride = {'exposures': {'raw': {'template': "raw/v%(visit)d_f%(filter)s.fits.gz"}}}
         policyPath = os.path.join(ROOT, 'policy', 'testMapper.yaml')

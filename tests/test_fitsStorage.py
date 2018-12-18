@@ -24,7 +24,8 @@ import os
 import tempfile
 import unittest
 
-# we only import lsst.obs.test.TestMapper from lsst.obs.test, but use the namespace to hide it from pytest
+# we only import lsst.obs.test.TestMapper from lsst.obs.test,
+# but use the namespace to hide it from pytest
 import lsst.obs.test
 import lsst.utils.tests
 from lsst.utils import getPackageDir
@@ -36,7 +37,6 @@ ROOT = getPackageDir('obs_test')
 
 
 class FitsStorageTestCase(lsst.utils.tests.TestCase):
-
     def setUp(self):
         inputDir = os.path.join(ROOT, "data", "input")
         self.testDir = tempfile.mkdtemp(dir=os.path.join(ROOT, 'tests'), prefix=type(self).__name__+'-')

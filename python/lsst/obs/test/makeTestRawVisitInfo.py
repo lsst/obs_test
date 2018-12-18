@@ -19,29 +19,40 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
+__all__ = ["MakeTestRawVisitInfo"]
 
 from lsst.afw.image import VisitInfo, RotType
 from lsst.afw.geom import degrees, SpherePoint
 from lsst.afw.coord import Observatory, Weather
 from lsst.obs.base import MakeRawVisitInfo
 
-__all__ = ["MakeTestRawVisitInfo"]
-
 
 class MakeTestRawVisitInfo(MakeRawVisitInfo):
-    """Make a VisitInfo from the FITS header of a test image
+    """Make a VisitInfo from the FITS header of a test image.
 
+    Notes
+    -----
     Since the test data is extracted from LSST Sim data,
     this is a copy of MakeLsstSimRawVisitInfo
-    (using a copy avoids undesireable dependencies)
+    (using a copy avoids undesireable dependencies).
     """
     observatory = Observatory(-70.749417*degrees, -30.244633*degrees, 2663)  # long, lat, elev
 
     def setArgDict(self, md, argDict):
-        """Set an argument dict for VisitInfo and pop associated metadata
+        """Set an argument dict for VisitInfo and pop associated metadata.
 
-        @param[in,out] md  metadata, as an lsst.daf.base.PropertyList or PropertySet
-        @param[in,out] argdict  a dict of arguments
+        Parameters
+        ----------
+        md : `lsst.daf.base.PropertySet`
+            Image metadata.
+        argDict : `dict`
+            A dict of arguments for the `lsst.afw.image.VisitInfo`
+            constructor. Updated by this call.
+
+        Returns
+        -------
+        visitInfo : `lsst.afw.image.VisitInfo`
+            Visit information.
         """
         MakeRawVisitInfo.setArgDict(self, md, argDict)
         argDict["darkTime"] = self.popFloat(md, "DARKTIME")
@@ -65,10 +76,20 @@ class MakeTestRawVisitInfo(MakeRawVisitInfo):
         return VisitInfo(**argDict)
 
     def getDateAvg(self, md, exposureTime):
-        """Return date at the middle of the exposure
+        """Return date at the middle of the exposure.
 
-        @param[in,out] md  FITS metadata; changed in place
-        @param[in] exposureTime  exposure time in sec
+        Parameters
+        ----------
+        md : `lsst.daf.base.PropertySet`
+            Image metadata.
+        exposureTime : `float`
+            Exposure time, in sec
+
+        Returns
+        -------
+        dateAvg : `lsst.daf.base.DateTime`
+            Date at middle of the exposure, or `lsst.daf.base.DateTime()`
+            if the metadata item ``TAI`` is not found.
         """
         startDate = self.popMjdDate(md, "TAI", timesys="TAI")
         return self.offsetDate(startDate, 0.5*exposureTime)
