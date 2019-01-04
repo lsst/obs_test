@@ -207,3 +207,7 @@ datasets:
     persistable: ignored
     python: matplotlib.figure.Figure
     storage: MatplotlibStorage
+  ossThumb:
+    template: thumbs/oss_v%(visit)d_f%(filter)s.png
+  flattenedThumb:
+    template: thumbs/flattened_v%(visit)d_f%(filter)s.png
