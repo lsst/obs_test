@@ -67,10 +67,10 @@ class TestCalexpMetadataObjects(lsst.utils.tests.TestCase):
         self.nanSafeAssertEqual(val1, val2)
 
     def test(self):
-        """Get the wcs, calib, and visitInfo from a calexp dataset."""
+        """Get the wcs, photoCalib, and visitInfo from a calexp dataset."""
         butler = dafPersist.Butler(inputs=self.input)
         wcs = butler.get('calexp_wcs', immediate=True)
-        calib = butler.get('calexp_calib', immediate=True)
+        photoCalib = butler.get('calexp_photoCalib', immediate=True)
         visitInfo = butler.get('calexp_visitInfo', immediate=True)
         filt = butler.get('calexp_filter', immediate=True)
         calexp = butler.get('calexp', immediate=True)
@@ -79,8 +79,8 @@ class TestCalexpMetadataObjects(lsst.utils.tests.TestCase):
         self.assertIsInstance(wcs, SkyWcs)
         self.assertWcsAlmostEqualOverBBox(wcs, calexp.getWcs(), calexp.getBBox())
 
-        self.assertIsInstance(calib, lsst.afw.image.Calib)
-        self.assertEqual(calib, calexp.getCalib())
+        self.assertIsInstance(photoCalib, lsst.afw.image.PhotoCalib)
+        self.assertEqual(photoCalib, calexp.getPhotoCalib())
 
         self.assertIsInstance(visitInfo, lsst.afw.image.VisitInfo)
         self.assertIsInstance(filt, lsst.afw.image.Filter)
