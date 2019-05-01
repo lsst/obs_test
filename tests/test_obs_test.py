@@ -87,8 +87,8 @@ class TestObsTest(lsst.obs.base.tests.ObsTests, lsst.utils.tests.TestCase):
                          ({'filter': 'g'}, [(1, 'g'), (2, 'g')]),
                          ({'filter': 'r'}, [(3, 'r')]),
                          )
-        map_python_type = 'lsst.afw.image.DecoratedImageU'
-        map_cpp_type = 'DecoratedImageU'
+        map_python_type = 'lsst.afw.image.ExposureU'
+        map_cpp_type = 'ExposureU'
         map_storage_name = 'FitsStorage'
         metadata_output_path = os.path.join('processCcd_metadata', 'v1_fg.yaml')
         raw_filename = 'raw_v1_fg.fits.gz'
