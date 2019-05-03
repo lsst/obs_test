@@ -55,7 +55,7 @@ To make an obs_test defects file from the bias frame generated above, from the o
 
     setup -r .
     data/utils/defectsFromBias.py data/input/bias/bias.fits.gz
-    mv defects_c0.fits data/input/defects/
+    mv defects_c0.dat $OBS_TEST_DATA_DIR/test/defects/0/19700101T000000.dat
 
 ## Hints for using the data
 

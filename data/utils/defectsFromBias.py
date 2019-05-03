@@ -28,42 +28,15 @@ from astropy.io import fits
 
 import lsst.afw.geom as afwGeom
 import lsst.afw.image as afwImage
+from lsst.meas.algorithms import Defects
 from lsst.ip.isr import getDefectListFromMask
 
-DefectsPath = "defects_c0.fits"
+DefectsPath = "defects_c0.dat"
 """Output path for defects file."""
 detectorName = "0"
 """Detector name."""
 detectorSerial = "0000011"
 """Detector serial code"""
-
-
-def getBBoxList(path, detectorName):
-    """Read a defects file and return the defects as a list of bounding
-    boxes.
-
-    Parameters
-    ---------
-    path : `str`
-        Path to input defects file; a fits file.
-    detectorName : `str`
-        Name of detector.
-    """
-    with fits.open(path) as hduList:
-        for hdu in hduList[1:]:
-            if hdu.header["name"] != detectorName:
-                print("skipping header with name=%r" % (hdu.header["name"],))
-                continue
-
-            bboxList = []
-            for data in hdu.data:
-                bbox = afwGeom.Box2I(
-                    afwGeom.Point2I(int(data['x0']), int(data['y0'])),
-                    afwGeom.Extent2I(int(data['width']), int(data['height'])),
-                )
-                bboxList.append(bbox)
-            return bboxList
-        raise RuntimeError("Data not found for detector %r" % (detectorName,))
 
 
 def writeDefectsFile(bboxList, path, detectorSerial, detectorName):
@@ -74,31 +47,16 @@ def writeDefectsFile(bboxList, path, detectorSerial, detectorName):
     bboxList : `list` of `lsst.geom.Box2I`
         List of bounding boxes defining defect locations.
     path : `str`
-        Path of output defects file; should end with ".fits".
+        Path of output defects file; should end with ".dat".
     detectorSerial : `str`
         Serial code of detector.
     detectorName : `str`
         Name of detector.
     """
-    head = fits.Header()
-    head.update('SERIAL', detectorSerial, 'Serial of the detector')
-    head.update('NAME', detectorName, 'Name of detector for this defect map')
-    head.update('CDATE', time.asctime(time.gmtime()), 'UTC of creation')
-
-    x0 = numpy.array([d.getMinX() for d in bboxList])
-    y0 = numpy.array([d.getMinY() for d in bboxList])
-    width = numpy.array([d.getWidth() for d in bboxList])
-    height = numpy.array([d.getHeight() for d in bboxList])
-
-    col1 = fits.Column(name='x0', format='I', array=numpy.array(x0))
-    col2 = fits.Column(name='y0', format='I', array=numpy.array(y0))
-    col3 = fits.Column(name='height', format='I', array=numpy.array(height))
-    col4 = fits.Column(name='width', format='I', array=numpy.array(width))
-    cols = fits.ColDefs([col1, col2, col3, col4])
-    tbhdu = fits.new_table(cols, header=head)
-    hdu = fits.PrimaryHDU()
-    thdulist = fits.HDUList([hdu, tbhdu])
-    thdulist.writeto(DefectsPath)
+    with open(path, 'w') as fh:
+        fh.write("#  x0 y0 x_extent y_extent\n")
+        for box in bboxList:
+            fh.write(f'{box.getMinX():>8} {box.getMinY():>8} {box.getWidth():>8} {box.getHeight():>8}\n')
 
 
 if __name__ == "__main__":
@@ -117,8 +75,8 @@ Output is written to the current directory as file %r, which must not already ex
     writeDefectsFile(bboxList, DefectsPath, detectorSerial, detectorName)
     print("wrote defects file %r" % (DefectsPath,))
 
-    test2BBoxList = getBBoxList(DefectsPath, detectorName)
+    test2BBoxList = Defects.readLsstDefectsFile(DefectsPath)
     assert len(bboxList) == len(test2BBoxList)
     for boxA, boxB in zip(bboxList, test2BBoxList):
-        assert boxA == boxB
+        assert boxA == boxB.getBBox()
     print("verified that defects file %r round trips correctly" % (DefectsPath,))
