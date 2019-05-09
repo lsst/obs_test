@@ -25,38 +25,19 @@ import time
 
 import numpy
 from astropy.io import fits
+from dateutil import parser as date_parser
 
 import lsst.afw.geom as afwGeom
 import lsst.afw.image as afwImage
 from lsst.meas.algorithms import Defects
 from lsst.ip.isr import getDefectListFromMask
 
-DefectsPath = "defects_c0.dat"
+DefectsPath = "defects_c0"
 """Output path for defects file."""
 detectorName = "0"
 """Detector name."""
 detectorSerial = "0000011"
 """Detector serial code"""
-
-
-def writeDefectsFile(bboxList, path, detectorSerial, detectorName):
-    """Write a defects FITS file.
-
-    Parameters
-    ----------
-    bboxList : `list` of `lsst.geom.Box2I`
-        List of bounding boxes defining defect locations.
-    path : `str`
-        Path of output defects file; should end with ".dat".
-    detectorSerial : `str`
-        Serial code of detector.
-    detectorName : `str`
-        Name of detector.
-    """
-    with open(path, 'w') as fh:
-        fh.write("#  x0 y0 x_extent y_extent\n")
-        for box in bboxList:
-            fh.write(f'{box.getMinX():>8} {box.getMinY():>8} {box.getWidth():>8} {box.getHeight():>8}\n')
 
 
 if __name__ == "__main__":
@@ -70,13 +51,20 @@ Output is written to the current directory as file %r, which must not already ex
     args = parser.parse_args()
 
     biasMI = afwImage.MaskedImageF(args.bias)
-    defectList = getDefectListFromMask(biasMI, "BAD")
-    bboxList = [defect.getBBox() for defect in defectList]
-    writeDefectsFile(bboxList, DefectsPath, detectorSerial, detectorName)
+    defectList = Defects.fromMask(biasMI, "BAD")
+    valid_start = date_parser.parse('19700101T000000')
+    md = defectList.getMetadata()
+    md['INSTRUME'] = 'test'
+    md['DETECTOR'] = detectorName
+    md['CALIBDATE'] = valid_start.isoformat()
+    md['FILTER'] = None
+    md['CALIB_ID'] = (f'detector={detectorName} calibDate={valid_start.isoformat()} '
+                      'ccd={detectorName} ccdnum={detectorName} filter=None')
+    defectList.writeText(DefectsPath)
     print("wrote defects file %r" % (DefectsPath,))
 
-    test2BBoxList = Defects.readLsstDefectsFile(DefectsPath)
-    assert len(bboxList) == len(test2BBoxList)
-    for boxA, boxB in zip(bboxList, test2BBoxList):
-        assert boxA == boxB.getBBox()
+    test2defectList = Defects.readText(DefectsPath+".ecsv")
+    assert len(defectList) == len(test2defectList)
+    for dA, dB in zip(defectList, test2defectList):
+        assert dA.getBBox() == dB.getBBox()
     print("verified that defects file %r round trips correctly" % (DefectsPath,))
