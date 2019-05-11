@@ -21,16 +21,11 @@
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
 import argparse
-import time
 
-import numpy
-from astropy.io import fits
 from dateutil import parser as date_parser
 
-import lsst.afw.geom as afwGeom
 import lsst.afw.image as afwImage
 from lsst.meas.algorithms import Defects
-from lsst.ip.isr import getDefectListFromMask
 
 DefectsPath = "defects_c0"
 """Output path for defects file."""
