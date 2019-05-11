@@ -18,6 +18,5 @@ pipe_tasks_dir = getPackageDir('pipe_tasks')
 data_dir = getPackageDir('obs_test_data')
 command = (f"{pipe_tasks_dir}/bin/ingestDefects.py data/input {data_dir}/test/defects "+
             "--calib data/input")
-commandInst = env.Command('calibRegistry.sqlite3', [], command)
+commandInst = env.Command('input/calibRegistry.sqlite3', [], command)
 env.Depends(commandInst, lsst.sconsUtils.targets["python"])
-registry = env.AlwaysBuild(commandInst)
