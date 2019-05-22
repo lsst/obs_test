@@ -20,5 +20,3 @@ tests/data/input/config-*.py
 tests/data/input/md_*.boost
 bin/genInputRegistry.py
 bin/mkpickle.py
-data/input/calibRegistry.sqlite3
-data/input/defects/
