@@ -53,8 +53,6 @@ Output is written to the current directory as file %r, which must not already ex
     md['DETECTOR'] = detectorName
     md['CALIBDATE'] = valid_start.isoformat()
     md['FILTER'] = None
-    md['CALIB_ID'] = (f'detector={detectorName} calibDate={valid_start.isoformat()} '
-                      'ccd={detectorName} ccdnum={detectorName} filter=None')
     defectList.writeText(DefectsPath)
     print("wrote defects file %r" % (DefectsPath,))
 
