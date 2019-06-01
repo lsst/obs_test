@@ -53,11 +53,9 @@ Output is written to the current directory as file %r, which must not already ex
     md['DETECTOR'] = detectorName
     md['CALIBDATE'] = valid_start.isoformat()
     md['FILTER'] = None
-    defectList.writeText(DefectsPath)
+    defect_file = defectList.writeText(DefectsPath)
     print("wrote defects file %r" % (DefectsPath,))
 
-    test2defectList = Defects.readText(DefectsPath+".ecsv")
-    assert len(defectList) == len(test2defectList)
-    for dA, dB in zip(defectList, test2defectList):
-        assert dA.getBBox() == dB.getBBox()
+    test2defectList = Defects.readText(defect_file)
+    assert defectList == test2defectList
     print("verified that defects file %r round trips correctly" % (DefectsPath,))
