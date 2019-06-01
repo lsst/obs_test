@@ -37,10 +37,10 @@ detectorSerial = "0000011"
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="""Construct a defects file from the mask plane of a test camera bias frame.
+        description=f"""Construct a defects file from the mask plane of a test camera bias frame.
 To use this command you must setup ip_isr and astropy.
-Output is written to the current directory as file %r, which must not already exist.
-""" % (DefectsPath,)
+Output is written to the current directory as file {DefectsPath}, which must not already exist.
+"""
     )
     parser.add_argument("bias", help="path to bias image for the test camera")
     args = parser.parse_args()
