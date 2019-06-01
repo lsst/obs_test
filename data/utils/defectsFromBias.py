@@ -22,7 +22,7 @@
 #
 import argparse
 
-from dateutil import parser as date_parser
+import dateutil.parser
 
 import lsst.afw.image as afwImage
 from lsst.meas.algorithms import Defects
@@ -47,7 +47,7 @@ Output is written to the current directory as file %r, which must not already ex
 
     biasMI = afwImage.MaskedImageF(args.bias)
     defectList = Defects.fromMask(biasMI, "BAD")
-    valid_start = date_parser.parse('19700101T000000')
+    valid_start = dateutil.parser.parse('19700101T000000')
     md = defectList.getMetadata()
     md['INSTRUME'] = 'test'
     md['DETECTOR'] = detectorName
