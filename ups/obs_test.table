@@ -5,6 +5,7 @@ setupRequired(pex_config)
 setupRequired(pex_policy)
 setupRequired(numpy)
 setupRequired(utils)
+setupRequired(obs_test_data)
 setupOptional(astropy)
 
 envPrepend(PYTHONPATH, ${PRODUCT_DIR}/python)

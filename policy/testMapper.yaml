@@ -1,5 +1,3 @@
-defects: ../description/defects
-
 needCalibRegistry: false
 
 levels:
@@ -48,6 +46,13 @@ exposures:
     template: fcr/v%(visit)d_f%(filter)s.fcr.fits
 
 calibrations:
+  defects:
+    level: Ccd
+    persistable: BaseCatalog
+    python: lsst.meas.algorithms.Defects
+    storage: FitsCatalogStorage
+    tables: defects
+    template: defects/defects.fits
   bias:
     level: Ccd
     persistable: ExposureF

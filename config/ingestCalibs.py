@@ -10,6 +10,6 @@ config.register.columns = {'filter': 'text',
                            }
 config.register.detector = ['filter']
 config.register.visit = ['calibDate']
-config.register.tables = ['bias', 'flat']  # defects are hardcoded into mapper; cannot be ingested
+config.register.tables = ['bias', 'flat', 'defects']
 config.register.validityUntilSuperseded = config.register.tables
 config.register.unique = ['filter', 'calibDate']
