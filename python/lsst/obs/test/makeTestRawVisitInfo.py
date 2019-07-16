@@ -22,7 +22,7 @@
 __all__ = ["MakeTestRawVisitInfo"]
 
 from lsst.afw.image import VisitInfo, RotType
-from lsst.geom import degrees, SpherePoint
+from lsst.afw.geom import degrees, SpherePoint
 from lsst.afw.coord import Observatory, Weather
 from lsst.obs.base import MakeRawVisitInfo
 

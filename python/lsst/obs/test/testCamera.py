@@ -24,7 +24,6 @@ __all__ = ["TestCamera"]
 import numpy as np
 
 import lsst.afw.cameraGeom as cameraGeom
-import lsst.geom as geom
 import lsst.afw.geom as afwGeom
 from lsst.afw.table import AmpInfoCatalog, AmpInfoTable, LL
 from lsst.afw.cameraGeom import NullLinearityType
@@ -59,7 +58,7 @@ class TestCamera(cameraGeom.Camera):
         with visit=1
     """
     def __init__(self):
-        plateScale = geom.Angle(20, geom.arcseconds)  # plate scale, in angle on sky/mm
+        plateScale = afwGeom.Angle(20, afwGeom.arcseconds)  # plate scale, in angle on sky/mm
         # Radial distortion is modeled as a radial polynomial that converts from focal plane (in mm)
         # to field angle (in radians). Thus the coefficients are:
         # C0: always 0, for continuity at the center of the focal plane; units are rad
@@ -176,9 +175,9 @@ class TestCamera(cameraGeom.Camera):
                 }[(ampX, ampY)]
                 record = ampInfoCatalog.addNew()
                 record.setName("%d%d" % (ampX, ampY))
-                record.setBBox(geom.Box2I(
-                    geom.Point2I(ampX * xDataExtent, ampY * yDataExtent),
-                    geom.Extent2I(xDataExtent, yDataExtent),
+                record.setBBox(afwGeom.Box2I(
+                    afwGeom.Point2I(ampX * xDataExtent, ampY * yDataExtent),
+                    afwGeom.Extent2I(xDataExtent, yDataExtent),
                 ))
 
                 x0Raw = ampX * xRawExtent
@@ -189,19 +188,19 @@ class TestCamera(cameraGeom.Camera):
                 x0Bias = x0Raw
                 x0Data = x0Bias + xBiasExtent
 
-                record.setRawBBox(geom.Box2I(
-                    geom.Point2I(x0Raw, y0Raw),
-                    geom.Extent2I(xRawExtent, yRawExtent),
+                record.setRawBBox(afwGeom.Box2I(
+                    afwGeom.Point2I(x0Raw, y0Raw),
+                    afwGeom.Extent2I(xRawExtent, yRawExtent),
                 ))
-                record.setRawDataBBox(geom.Box2I(
-                    geom.Point2I(x0Data, y0Raw),
-                    geom.Extent2I(xDataExtent, yDataExtent),
+                record.setRawDataBBox(afwGeom.Box2I(
+                    afwGeom.Point2I(x0Data, y0Raw),
+                    afwGeom.Extent2I(xDataExtent, yDataExtent),
                 ))
-                record.setRawHorizontalOverscanBBox(geom.Box2I(
-                    geom.Point2I(x0Bias, y0Raw),
-                    geom.Extent2I(xBiasExtent, yRawExtent),
+                record.setRawHorizontalOverscanBBox(afwGeom.Box2I(
+                    afwGeom.Point2I(x0Bias, y0Raw),
+                    afwGeom.Extent2I(xBiasExtent, yRawExtent),
                 ))
-                record.setRawXYOffset(geom.Extent2I(x0Raw, y0Raw))
+                record.setRawXYOffset(afwGeom.Extent2I(x0Raw, y0Raw))
                 record.setReadoutCorner(readCorner)
                 record.setGain(gain)
                 record.setReadNoise(readNoise)
@@ -212,6 +211,6 @@ class TestCamera(cameraGeom.Camera):
                 record.setHasRawInfo(True)
                 record.setRawFlipX(False)
                 record.setRawFlipY(False)
-                record.setRawVerticalOverscanBBox(geom.Box2I())  # no vertical overscan
-                record.setRawPrescanBBox(geom.Box2I())  # no horizontal prescan
+                record.setRawVerticalOverscanBBox(afwGeom.Box2I())  # no vertical overscan
+                record.setRawPrescanBBox(afwGeom.Box2I())  # no horizontal prescan
         return ampInfoCatalog
