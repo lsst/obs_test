@@ -29,7 +29,7 @@ import unittest
 
 
 from lsst.afw.image.testUtils import makeRampImage
-import lsst.afw.geom as afwGeom
+import lsst.geom as geom
 import lsst.afw.image as afwImage
 import lsst.daf.persistence as dafPersist
 import lsst.obs.test
@@ -94,7 +94,7 @@ class TestCompositeTestCase(lsst.utils.tests.TestCase):
         butler = dafPersist.Butler(
             inputs=dafPersist.RepositoryArgs(root=self.input, mapper='lsst.obs.test.testMapper.TestMapper'),
             outputs=outputs)
-        bbox = afwGeom.Box2I(afwGeom.Point2I(0, 0), afwGeom.Point2I(10, 10))
+        bbox = geom.Box2I(geom.Point2I(0, 0), geom.Point2I(10, 10))
         raw = makeRampDecoratedImage(bbox=bbox, start=100, raw1=5, raw2="hello")
         flat = makeRampDecoratedImage(bbox=bbox, start=-55, flat1="me", flat2=47)
 
