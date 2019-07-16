@@ -25,7 +25,7 @@ import unittest
 
 import lsst.utils.tests
 from lsst.utils import getPackageDir
-from lsst.afw.geom import arcseconds, Extent2I
+from lsst.geom import arcseconds, Extent2I
 import lsst.obs.base.tests
 import lsst.obs.test
 
