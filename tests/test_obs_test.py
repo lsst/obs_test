@@ -58,7 +58,7 @@ class TestObsTest(lsst.obs.base.tests.ObsTests, lsst.utils.tests.TestCase):
                       'bias': Extent2I(1018, 2000),
                       'flat': Extent2I(1018, 2000)
                       }
-        sky_origin = (79.24522, -9.702295)
+        sky_origin = (79.24521968, -9.702295415)
         raw_subsets = (({'level': 'sensor', 'filter': 'g'}, 2),
                        ({'level': 'sensor', 'visit': 1}, 1),
                        ({'level': 'filter', 'visit': 1}, 1),
