@@ -1,7 +1,0 @@
-#<?cfg paf policy ?>
-
-exposures: {
-    raw: {
-        template:    "raw/v%(visit)d_f%(filter)s.fits.gz"
-    }
-}
