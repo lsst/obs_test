@@ -1,7 +1,0 @@
-#<?cfg paf policy ?>
-
-exposures: {
-    raw: {
-        template:    "some/random/path/v%(visit)d_f%(filter)s.fits.gz"
-    }
-}
