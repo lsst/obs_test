@@ -23,6 +23,7 @@ import os
 import sys
 import unittest
 
+import lsst.afw.geom
 import lsst.utils.tests
 from lsst.utils import getPackageDir
 from lsst.geom import arcseconds, Extent2I
@@ -64,6 +65,10 @@ class TestObsTest(lsst.obs.base.tests.ObsTests, lsst.utils.tests.TestCase):
                        ({'level': 'visit', 'filter': 'g'}, 2)
                        )
         linearizer_type = unittest.SkipTest
+
+        path_to_raw = os.path.join(data_dir, "raw", "raw_v1_fg.fits.gz")
+        raw_header_wcs = lsst.afw.geom.makeSkyWcs(lsst.afw.fits.readMetadata(path_to_raw))
+
         self.setUp_butler_get(ccdExposureId_bits=ccdExposureId_bits,
                               exposureIds=exposureIds,
                               filters=filters,
@@ -74,10 +79,10 @@ class TestObsTest(lsst.obs.base.tests.ObsTests, lsst.utils.tests.TestCase):
                               dimensions=dimensions,
                               sky_origin=sky_origin,
                               raw_subsets=raw_subsets,
-                              linearizer_type=linearizer_type
+                              linearizer_type=linearizer_type,
+                              raw_header_wcs=raw_header_wcs
                               )
 
-        path_to_raw = os.path.join(data_dir, "raw", "raw_v1_fg.fits.gz")
         keys = set(('filter', 'name', 'patch', 'tract', 'visit', 'pixel_id', 'subfilter', 'description',
                     'fgcmcycle', 'numSubfilters', 'label', 'detector'))
         query_format = ["visit", "filter"]
