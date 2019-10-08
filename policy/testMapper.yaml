@@ -32,6 +32,8 @@ exposures:
     template: icExp/icExp_v%(visit)d_f%(filter)s.fits
   calexp:
     template: calexp/calexp_v%(visit)d_f%(filter)s.fits
+  fakes_calexp:
+    template: fakes_calexp/fakes_calexp_t%(tract)d_v%(visit)d_f%(filter)s.fits
   wcs:
     template: wcs/v%(visit)d_f%(filter)s.wcs.fits
   fcr:
@@ -157,6 +159,8 @@ datasets:
     template: schema/forced.fits
   src:
     template: src/v%(visit)d_f%(filter)s.fits
+  fakes_src:
+    template: fakes_src/t%(tract)d_v%(visit)d_f%(filter)s.fits
   transformed_src:
     persistable: ignored
     python: lsst.afw.table.BaseCatalog
