@@ -26,9 +26,6 @@ import numpy as np
 import lsst.afw.cameraGeom as cameraGeom
 import lsst.geom as geom
 import lsst.afw.geom as afwGeom
-from lsst.afw.table import AmpInfoCatalog, AmpInfoTable, LL
-from lsst.afw.cameraGeom import NullLinearityType
-from lsst.afw.cameraGeom.cameraFactory import makeDetector
 
 
 class TestCamera(cameraGeom.Camera):
@@ -58,7 +55,7 @@ class TestCamera(cameraGeom.Camera):
     * ``visit``: exposure number; test data includes one exposure
         with visit=1
     """
-    def __init__(self):
+    def __new__(cls):
         plateScale = geom.Angle(20, geom.arcseconds)  # plate scale, in angle on sky/mm
         # Radial distortion is modeled as a radial polynomial that converts from focal plane (in mm)
         # to field angle (in radians). Thus the coefficients are:
@@ -69,34 +66,41 @@ class TestCamera(cameraGeom.Camera):
         radialCoeff = np.array([0.0, 1.0, 0.0, 0.925]) / plateScale.asRadians()
         fieldAngleToFocalPlane = afwGeom.makeRadialTransform(radialCoeff)
         focalPlaneToFieldAngle = fieldAngleToFocalPlane.inverted()
-        cameraTransformMap = cameraGeom.TransformMap(cameraGeom.FOCAL_PLANE,
-                                                     {cameraGeom.FIELD_ANGLE: focalPlaneToFieldAngle})
-        detectorList = self._makeDetectorList(focalPlaneToFieldAngle)
-        cameraGeom.Camera.__init__(self, "test", detectorList, cameraTransformMap)
 
-    def _makeDetectorList(self, focalPlaneToFieldAngle):
+        camera = cameraGeom.Camera.Builder("test")
+        cls._makeDetectors(camera, focalPlaneToFieldAngle)
+        camera.setTransformFromFocalPlaneTo(cameraGeom.FIELD_ANGLE, focalPlaneToFieldAngle)
+        return camera.finish()
+
+    def __init__(self):
+        pass
+
+    @classmethod
+    def _makeDetectors(cls, camera, focalPlaneToFieldAngle):
         """Make a list of detectors
 
         Parameters
         ----------
+        camera : `lsst.afw.cameraGeom.camera.Builder`
+            Camera to append detectors to.
         focalPlaneToFieldAngle : `lsst.afw.geom.TransformPoint2ToPoint2`
             Transform from ``FOCAL_PLANE`` to ``FIELD_ANGLE`` coordinates
             in the forward direction.
-
-        Returns
-        -------
-        detectorList : `list` of `lsst.afw.cameraGeom.Detector`
-            List of detectors.
         """
-        detectorList = []
-        detectorConfigList = self._makeDetectorConfigList()
+        detectorConfigList = cls._makeDetectorConfigList()
         for detectorConfig in detectorConfigList:
-            ampInfoCatalog = self._makeAmpInfoCatalog()
-            detector = makeDetector(detectorConfig, ampInfoCatalog, focalPlaneToFieldAngle)
-            detectorList.append(detector)
-        return detectorList
+            amplifiers = cls._makeAmplifierCatalog()
+            detBuilder = cameraGeom.addDetectorBuilderFromConfig(
+                camera,
+                detectorConfig,
+                amplifiers,
+                focalPlaneToFieldAngle,
+            )
+            if detBuilder is None:
+                raise RuntimeError("Could not add detector!")
 
-    def _makeDetectorConfigList(self):
+    @classmethod
+    def _makeDetectorConfigList(cls):
         """Make a list of detector configs
 
         Returns
@@ -130,12 +134,13 @@ class TestCamera(cameraGeom.Camera):
         detector0Config.rollDeg = 0.0
         return [detector0Config]
 
-    def _makeAmpInfoCatalog(self):
+    @classmethod
+    def _makeAmplifierCatalog(cls):
         """Construct an amplifier info catalog
 
         Returns
         -------
-        ampInfoCatalog : `lsst.afw.table.AmpInfoCatalog`
+        ampCatalog : `List` of `lsst.afw.cameraGeom.Amplifier.Builder()
             Amplifier information catalog.
 
         Notes
@@ -151,13 +156,10 @@ class TestCamera(cameraGeom.Camera):
         yRawExtent = yDataExtent
         readNoise = 3.975  # amplifier read noise, in e-
         saturationLevel = 65535
-        linearityType = NullLinearityType
+        linearityType = cameraGeom.NullLinearityType
         linearityCoeffs = [0, 0, 0, 0]
 
-        schema = AmpInfoTable.makeMinimalSchema()
-
-        self.ampInfoDict = {}
-        ampInfoCatalog = AmpInfoCatalog(schema)
+        ampCatalog = []
         for ampX in (0, 1):
             for ampY in (0, 1):
                 # amplifier gain (e-/ADU) and read noiuse (ADU/pixel) from lsstSim raw data
@@ -174,9 +176,9 @@ class TestCamera(cameraGeom.Camera):
                     (1, 0): 4.02753931932633,   # C0,1
                     (1, 1): 4.1890610691135,    # C1,1
                 }[(ampX, ampY)]
-                record = ampInfoCatalog.addNew()
-                record.setName("%d%d" % (ampX, ampY))
-                record.setBBox(geom.Box2I(
+                amplifier = cameraGeom.Amplifier.Builder()
+                amplifier.setName("%d%d" % (ampX, ampY))
+                amplifier.setBBox(geom.Box2I(
                     geom.Point2I(ampX * xDataExtent, ampY * yDataExtent),
                     geom.Extent2I(xDataExtent, yDataExtent),
                 ))
@@ -185,33 +187,34 @@ class TestCamera(cameraGeom.Camera):
                 y0Raw = ampY * yRawExtent
 
                 # bias region (which is prescan, in this case) is before the data
-                readCorner = LL
+                readCorner = cameraGeom.ReadoutCorner.LL
                 x0Bias = x0Raw
                 x0Data = x0Bias + xBiasExtent
 
-                record.setRawBBox(geom.Box2I(
+                amplifier.setRawBBox(geom.Box2I(
                     geom.Point2I(x0Raw, y0Raw),
                     geom.Extent2I(xRawExtent, yRawExtent),
                 ))
-                record.setRawDataBBox(geom.Box2I(
+                amplifier.setRawDataBBox(geom.Box2I(
                     geom.Point2I(x0Data, y0Raw),
                     geom.Extent2I(xDataExtent, yDataExtent),
                 ))
-                record.setRawHorizontalOverscanBBox(geom.Box2I(
+                amplifier.setRawHorizontalOverscanBBox(geom.Box2I(
                     geom.Point2I(x0Bias, y0Raw),
                     geom.Extent2I(xBiasExtent, yRawExtent),
                 ))
-                record.setRawXYOffset(geom.Extent2I(x0Raw, y0Raw))
-                record.setReadoutCorner(readCorner)
-                record.setGain(gain)
-                record.setReadNoise(readNoise)
-                record.setSaturation(saturationLevel)
-                record.setSuspectLevel(float("nan"))
-                record.setLinearityCoeffs([float(val) for val in linearityCoeffs])
-                record.setLinearityType(linearityType)
-                record.setHasRawInfo(True)
-                record.setRawFlipX(False)
-                record.setRawFlipY(False)
-                record.setRawVerticalOverscanBBox(geom.Box2I())  # no vertical overscan
-                record.setRawPrescanBBox(geom.Box2I())  # no horizontal prescan
-        return ampInfoCatalog
+                amplifier.setRawXYOffset(geom.Extent2I(x0Raw, y0Raw))
+                amplifier.setReadoutCorner(readCorner)
+                amplifier.setGain(gain)
+                amplifier.setReadNoise(readNoise)
+                amplifier.setSaturation(saturationLevel)
+                amplifier.setSuspectLevel(float("nan"))
+                amplifier.setLinearityCoeffs([float(val) for val in linearityCoeffs])
+                amplifier.setLinearityType(linearityType)
+                # amplifier.setHasRawInfo(True)
+                amplifier.setRawFlipX(False)
+                amplifier.setRawFlipY(False)
+                amplifier.setRawVerticalOverscanBBox(geom.Box2I())  # no vertical overscan
+                amplifier.setRawPrescanBBox(geom.Box2I())  # no horizontal prescan
+                ampCatalog.append(amplifier)
+        return ampCatalog
