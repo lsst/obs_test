@@ -27,7 +27,6 @@ from astropy.io import fits
 import lsst.afw.geom as afwGeom
 import lsst.afw.image as afwImage
 import lsst.meas.algorithms as measAlg
-from lsst.ip.isr import maskPixelsFromDefectList
 
 MaskFileName = "defectsMask.fits"
 
@@ -79,7 +78,7 @@ def writeDefectsFile(bboxList, path):
     for bbox in bboxList:
         nd = measAlg.Defect(bbox)
         defectList.append(nd)
-    maskPixelsFromDefectList(defectsMaskedImage, defectList, maskName='BAD')
+    defectsMaskedImage = measAlg.Defects(defectList).maskPixels(defectsMaskedImage, maskName='BAD')
     defectsMaskedImage.getMask().writeFits(MaskFileName)
     print("wrote %s with bbox %s" % (MaskFileName, maskBBox,))
 
