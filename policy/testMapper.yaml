@@ -207,6 +207,8 @@ datasets:
     template: deepDiff/v%(visit)d_kernelSrc_f%(filter)s.fits
   apPipe_metadata:
     template: apPipe_metadata/v%(visit)d_f%(filter)s.yaml
+  apdb_marker:
+    template: apdb/v%(visit)d_f%(filter)s.py
   test_plot:
     template: test_plot/v%(visit)d_f%(filter)s.png
     persistable: ignored
