@@ -74,11 +74,8 @@ def writeDefectsFile(bboxList, path):
         maskBBox.include(box)
 
     defectsMaskedImage = afwImage.MaskedImageF(maskBBox)
-    defectList = measAlg.DefectListT()
-    for bbox in bboxList:
-        nd = measAlg.Defect(bbox)
-        defectList.append(nd)
-    defectsMaskedImage = measAlg.Defects(defectList).maskPixels(defectsMaskedImage, maskName='BAD')
+    defectList = measAlg.Defects(bboxList)
+    defectsMaskedImage = defectList.maskPixels(defectsMaskedImage, maskName='BAD')
     defectsMaskedImage.getMask().writeFits(MaskFileName)
     print("wrote %s with bbox %s" % (MaskFileName, maskBBox,))
 
