@@ -57,7 +57,7 @@ To make an obs_test defects file from the bias frame generated above, from the o
     data/utils/defectsFromBias.py data/input/bias/bias.fits.gz
     mv defects_c0.ecsv $OBS_TEST_DATA_DIR/test/defects/0/19700101T000000.ecsv
 
-    ingestStdTextCalibs.py data/input $OBS_TEST_DATA_DIR/test/defects --calib data/input
+    ingestCuratedCalibs.py data/input $OBS_TEST_DATA_DIR/test/defects --calib data/input
 
 In practice, the ingested defects are checked into the test data repository in `data/input` because
 ingestion depends on pipe_tasks which introduces a circular dependency if done at scons time.
