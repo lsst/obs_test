@@ -83,8 +83,8 @@ class TestObsTest(lsst.obs.base.tests.ObsTests, lsst.utils.tests.TestCase):
                               raw_header_wcs=raw_header_wcs
                               )
 
-        keys = set(('filter', 'name', 'patch', 'tract', 'visit', 'pixel_id', 'subfilter', 'description',
-                    'fgcmcycle', 'numSubfilters', 'label', 'detector', 'expId'))
+        keys = set(('filter', 'name', 'patch', 'tract', 'visit', 'pixel_id', 'subfilter',
+                    'fgcmcycle', 'numSubfilters', 'label', 'detector', 'expId', 'subdir'))
         query_format = ["visit", "filter"]
         queryMetadata = (({'visit': 1}, [(1, 'g')]),
                          ({'visit': 2}, [(2, 'g')]),
