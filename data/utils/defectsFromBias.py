@@ -25,7 +25,7 @@ import argparse
 import dateutil.parser
 
 import lsst.afw.image as afwImage
-from lsst.meas.algorithms import Defects
+from lsst.ip.isr import Defects
 
 DefectsPath = "defects_c0"
 """Output path for defects file."""
