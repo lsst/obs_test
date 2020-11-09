@@ -49,7 +49,7 @@ calibrations:
   defects:
     level: Ccd
     persistable: BaseCatalog
-    python: lsst.meas.algorithms.Defects
+    python: lsst.ip.isr.Defects
     storage: FitsCatalogStorage
     tables: defects
     template: defects/defects.fits
