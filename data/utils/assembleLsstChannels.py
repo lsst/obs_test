@@ -100,7 +100,7 @@ def assembleImage(dirPath, **kwargs):
     # copy WCS, filter and other metadata
     if inExposure.hasWcs():
         outExposure.setWcs(inExposure.getWcs())
-    outExposure.setFilter(inExposure.getFilter())
+    outExposure.setFilterLabel(inExposure.getFilterLabel())
     metadata = inExposure.getMetadata()
     updateMetadata(metadata, **kwargs)
     outExposure.setMetadata(metadata)
